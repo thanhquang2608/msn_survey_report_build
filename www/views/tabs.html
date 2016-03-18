@@ -1,0 +1,21 @@
+﻿<nav style="z-index:1001;" id="tab" class="navbar tab_custom navbar-fixed-top" role="tablist">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a id="back-button" class="navbar-btn pull-left" ng-click="backPage()">
+                <span class="glyphicon glyphicon-arrow-left white-icon-custom" style="font-size:25px;"></span>
+            </a>
+            <a href="#/tabs/report-survey-menu" class="btn pull-right" id="home-button">
+                <span class="glyphicon glyphicon-home white-icon-custom" style="font-size:25px;"></span>
+            </a>
+            <span id="top-title" class="nav-header">Báo cáo khảo sát </span>
+        </div>
+    </div>
+</nav>
+
+<div class="clear-all"></div>
+
+<div ng-style="wrapper">
+    <div ui-view></div>
+    <div class="container-fluid" ng-show="$state.includes('tabs.report-survey-option')" ui-view="report-survey-option"></div>
+</div>
+

@@ -1,0 +1,77 @@
+﻿<div id="report-survey-all-province" class="padding container-fluid">
+    <div class="padding center-form">
+        <!-- info table -->
+        <table border="0" cellpadding="0" cellspacing="0" class="table table-responsive" id="custom-info-table" ng-model="optionInfo">
+                <tr >
+                    <th>Công ty:</th>
+                    <td>{{optionInfo.company}}</td>
+                </tr>
+
+                <tr >
+                    <th >Sản phẩm:</th>
+                    <td >{{optionInfo.product}}</td>
+                </tr>
+
+                <tr >
+                    <th >Loại đại lý:</th>
+                    <td >{{optionInfo.dealer}}</td>
+                </tr>
+
+                <tr >
+                    <th >Miền:</th>
+                    <td >{{optionInfo.region}}</td>
+                </tr>
+
+                <tr  ng-show="optionInfo.province">
+                    <th >Tỉnh:</th>
+                    <td >{{optionInfo.province}}</td>
+                </tr>
+
+                <tr  ng-show="optionInfo.district">
+                    <th >Huyện:</th>
+                    <td >{{optionInfo.district}}</td>
+                </tr>
+
+                <tr  ng-show="optionInfo.ward">
+                    <th >Xã:</th>
+                    <td >{{optionInfo.ward}}</td>
+                </tr>
+        </table>
+
+        <!-- use a responsive table to align everything-->
+        <table border="0" cellpadding="0" cellspacing="0" class="table table-responsive no-border" id="custom-area-table">
+            <!--First row contains regions-->
+            <tr>
+                <!-- First empty cell-->
+                <th rowspan="2" style="padding:0px;"><button class="btn btn-default btn-block cs-btn-switch" ng-hide="1"><span class="glyphicon glyphicon-retweet"></span></button></th>
+                <th colspan="2" class="no-bottom-border" 
+                    ng-repeat="cellrow in first_row track by cellrow.id">{{cellrow.name}}</th>
+
+            </tr>
+
+            <!--Second row display symbol percentage and number-->
+            <tr>
+                <th colspan="2" class="no-top-border" ng-repeat="cellrow in first_row track by cellrow.id">
+                    <div class="row no-space">
+                        <div class="col-md-6">%</div><div class="col-md-6">SL</div>
+                    </div>
+                </th>
+            </tr>
+            <!--Display data from this row-->
+            <tr ng-repeat="data in data track by data.id">
+
+                <td class="vertical-align-text">{{data.name}}</td>
+
+                <td colspan="2" ng-repeat="data in data.data track by data.id">
+                    <div class="row">
+                        <div class="col-md-6">{{data.percentage}}</div>
+                        <div class="col-md-6">{{data.number}}</div>
+                    </div>
+                </td>
+            </tr>
+        </table>
+        <div>
+            <img class="ms-loading" src="./img/loading-large.gif" alt="Loading" ng-show="isLoading" />
+        </div>
+    </div>
+</div>

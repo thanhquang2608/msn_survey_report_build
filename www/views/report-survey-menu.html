@@ -1,0 +1,57 @@
+﻿
+<div id="report-survey-menu" class="padding container-fluid no-border" >
+    <div class="padding center-form">
+        <!-- use a responsive table to align everything-->
+        <table border="0" cellpadding="0" cellspacing="0" class="table table-responsive" id="menu-table-custom">
+            <tr>
+                <!-- button to show report feature-->
+                <td>
+                    <button type="button" class="report-survey-menu-button" ng-click="OnClickReport()">
+                        <img class="half-image" id="baocao" />
+                    </button>
+                    <h3 class="text-center"><b>Báo cáo</b></h3>
+                </td>
+
+                <!-- button to show survey result by region feature-->
+                <td>
+                    <button type="button" class="report-survey-menu-button" ng-click="OnClickSurvey()">
+                        <img class="half-image" id="khaosat" />
+                    </button>
+                    <h3 class="text-center"><b> Khảo sát</b></h3>
+                </td>
+            </tr>
+
+            <tr>
+
+                <!-- button to show agency map feature-->
+                <td>
+                    <button type="button" class="report-survey-menu-button" ng-click="OnClickShowAgencyLocation()">
+                        <img class="half-image" id="bando" />
+                    </button>
+                    <h3 class="text-center"><b>Bản đồ đại lý</b> </h3>
+                </td>
+
+                <!-- button to show Chăn nuôi feature-->
+                <td>
+                    <button type="button" class="report-survey-menu-button" ng-click="OnClickShowSurveyResultByRegion()">
+                        <img class="half-image" id="channuoi" />
+                    </button>
+                    <h3 class="text-center"><b>Vùng chăn nuôi</b></h3>
+                </td>
+            </tr>
+        </table>
+        
+        
+    </div>
+
+</div>
+
+<div>
+    <img class="ms-loading" src="./img/loading-large.gif" alt="Loading" ng-show="isLoading()" />
+</div>
+
+<div class="ms-delay-screen" ng-show="isLoading()"></div>
+
+<div id="bottom-tab" class="navbar navbar-default navbar-fixed-bottom" role="navigation">
+    <button class="btn btn-default btn-block" ng-click="logout()">Đăng xuất</button>
+</div>

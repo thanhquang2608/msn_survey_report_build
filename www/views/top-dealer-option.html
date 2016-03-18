@@ -1,0 +1,113 @@
+﻿<div id="top-dealer-option" class="padding container-fluid ">
+    <div class="padding center-form">
+        <!-- use a responsive table to align everything-->
+        <table border="0" cellpadding="0" cellspacing="0" class="table table-responsive no-border" id="custom-option-table">
+            <!-- Công ty row with 2 check select button Anco and Conco -->
+            <tr>
+                <th>Công ty</th>
+                <td>
+                        <input type="checkbox"
+                               class="ms-checkbox"
+                               name="company-anco" id="company-anco"
+                               ng-model="selected_option.company.anco"
+                               ng-disabled="lock.company">
+                    <label for="company-anco" class="ms-checkbox-label">
+                        ANCO
+                    </label>
+                </td>
+                <td>
+                        <input type="checkbox"
+                               class="ms-checkbox"
+                               name="company-conco" id="company-conco"
+                               ng-model="selected_option.company.conco"
+                               ng-disabled="lock.company">
+                    <label for="company-conco" class="ms-checkbox-label">
+                        CONCO
+                    </label>
+                </td>
+            </tr>
+            
+            <!-- Đại lý row contain checkbox for direct and indirect option -->
+            <tr>
+                <th>Loại đại lý</th>
+                <td>
+                    <input type="checkbox"
+                           class="ms-checkbox"
+                           name="dealer-direct" id="dealer-direct"
+                           ng-model="selected_option.dealer.direct">
+                    <label for="dealer-direct" class="ms-checkbox-label">
+                        Trực tiếp
+                    </label>
+                </td>
+                <td>
+                    <input type="checkbox"
+                           class="ms-checkbox"
+                           name="dealer-indirect" id="dealer-indirect"
+                           ng-model="selected_option.dealer.indirect">
+                    <label for="dealer-indirect" class="ms-checkbox-label">
+                        Gián Tiếp
+                    </label>
+                </td>
+            </tr>
+
+            <!-- Top 10 30 50 100 of dealer-->
+            <tr>
+                <th>Top</th>
+                <td colspan="2">
+                    <select class="form-control" ng-model="selected_option.top"
+                            ng-selected="0"
+                            ng-options="top as top.name for top in tops track by top.id">
+                        
+                    </select>
+                </td>
+            </tr>
+
+            <!-- The level of area want to check -->
+            <tr>
+                <th> Cấp độ</th>
+                <td colspan="2">
+                    <select class="form-control" ng-model="selected_option.level"
+                            ng-change="UpdateAreas()"
+                            ng-options="level as level.name for level in levels track by level.id">
+                    </select>
+                </td>
+            </tr>
+
+            <!-- contain provinces/regions -->
+            <tr>
+                <th>Miền/Tỉnh</th>
+                <td colspan="2">
+                    <select ng-selected="0" class="form-control"       
+                            ng-model="selected_option.area"
+                            ng-options="area as area.name for area in areas track by area.id"
+                     ></select>
+                </td>
+            </tr>
+
+           
+            
+            <!-- contain all product-->
+            <tr>
+                <th>Sản phẩm</th>
+                <td colspan="2">
+                    <select class="form-control"
+                            ng-model="selected_option.product"
+                            ng-options="product as product.name for product in products track by product.id"></select>
+                </td>
+            </tr>
+
+            <!-- contain all brand -->
+            <tr>
+                <th>Nhãn hiệu</th>
+                <td colspan="2">
+                    <select type="select" class="form-control"
+                            ng-model="selected_option.brand"
+                            ng-options="brand as brand.name for brand in brands track by brand.id"
+                            ></select>
+                </td>
+            </tr>
+
+        </table>
+        <button class="btn btn-primary btn-block" ng-click="viewReport();">Xem Chi Tiết</button>
+    </div>
+</div>

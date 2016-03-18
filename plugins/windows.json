@@ -1,0 +1,55 @@
+{
+    "prepare_queue": {
+        "installed": [],
+        "uninstalled": []
+    },
+    "config_munge": {
+        "files": {
+            "package.appxmanifest": {
+                "parents": {
+                    "/Package/Capabilities": [
+                        {
+                            "xml": "<DeviceCapability Name=\"webcam\" />",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<DeviceCapability Name=\"location\" />",
+                            "count": 1
+                        }
+                    ]
+                }
+            },
+            "config.xml": {
+                "parents": {
+                    "/*": [
+                        {
+                            "xml": "<preference name=\"AndroidPersistentFileLocation\" value=\"Internal\" />",
+                            "count": 1
+                        }
+                    ]
+                }
+            }
+        }
+    },
+    "installed_plugins": {
+        "cordova-plugin-camera": {
+            "PACKAGE_NAME": "Masan Survey"
+        },
+        "cordova-plugin-file": {
+            "PACKAGE_NAME": "Masan Survey"
+        },
+        "cordova-plugin-file-transfer": {
+            "PACKAGE_NAME": "Masan Survey"
+        },
+        "cordova-plugin-whitelist": {
+            "PACKAGE_NAME": "Masan Survey"
+        },
+        "cordova-plugin-x-toast": {
+            "PACKAGE_NAME": "Masan Nutri Science Survey"
+        },
+        "cordova-plugin-geolocation": {
+            "PACKAGE_NAME": "Masan Nutri Science Survey"
+        }
+    },
+    "dependent_plugins": {}
+}

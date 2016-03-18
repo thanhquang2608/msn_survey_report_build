@@ -1,0 +1,80 @@
+<div class="ms-container" >
+    <h3 class="ms-survey-dealers-title ms-text-center">Thông Tin Đại Lý</h3>
+
+    <h4 ng-show="info" class="ms-text-center ms-dealer-name">{{info.dealer_name}}</h4>
+
+    <img class="ms-loading" src="./img/loading-large.gif" alt="Loading" ng-hide="info"/>
+
+    <div class="ms-info" ng-show="info">
+        <div class="info-item">
+            <strong>Miền:</strong> {{info.region}}
+        </div>
+        <div class="info-item">
+            <strong>Tỉnh:</strong> {{info.province}}
+        </div>
+        <div class="info-item">
+            <strong>Huyện:</strong> {{info.district}}
+        </div>
+        <div class="info-item">
+            <strong>Địa chỉ:</strong> {{(info.dealer_address && info.dealer_address !== '') ? info.dealer_address : 'Đang cập nhật'}}
+        </div>
+    </div>
+</div>
+
+<div class="ms-container" ng-show="info">
+    <h3 class="title">HEO</h3>
+    <table class="table table-bordered ms-table ms-table-info">
+        <tbody>
+        <tr ng-repeat="(brand, yield) in info.yield.heo">
+            <td class="table-header">
+                {{getBrandName(brand)}}
+            </td>
+            <td>
+                {{yield}}
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <h3 class="title">GÀ</h3>
+    <table class="table table-bordered ms-table">
+        <tbody>
+        <tr ng-repeat="(brand, yield) in info.yield.ga">
+            <td class="table-header">
+                {{getBrandName(brand)}}
+            </td>
+            <td>
+                {{yield}}
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <h3 class="title">VỊT</h3>
+    <table class="table table-bordered ms-table">
+        <tbody>
+        <tr ng-repeat="(brand, yield) in info.yield.vit">
+            <td class="table-header">
+                {{getBrandName(brand)}}
+            </td>
+            <td>
+                {{yield}}
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <h3 class="title">BÒ</h3>
+    <table class="table table-bordered ms-table">
+        <tbody>
+        <tr ng-repeat="(brand, yield) in info.yield.bo">
+            <td class="table-header">
+                {{getBrandName(brand)}}
+            </td>
+            <td>
+                {{yield}}
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>

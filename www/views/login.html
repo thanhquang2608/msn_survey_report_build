@@ -1,0 +1,31 @@
+﻿<div class="padding container-fluid jumbotron" >
+    <div class="padding center-form" style="max-width:500px; margin:0 auto;">
+       <div style="margin-top:50px; padding:20px; background-color: rgba(255, 255, 255, 0.6); border-radius: 10px;"> 
+        <div class="list list-inset login-font" style="background-color:transparent; margin-top:0px;">
+            <label class="login header">Đăng nhập</label>
+              <div class="list">              
+
+                <!-- SaleId -->
+                <label class="item item-input">
+                  <div class="input-label">
+                    Tài khoản
+                  </div>
+                  <input style="font-size: 18px" class="form-control" type="email" placeholder="Tài khoản" ng-model="user.id">
+                </label>
+                <!-- SaleId -->
+
+                <!-- Password -->
+                <label class="item item-input">
+                  <div class="input-label">
+                    Mật khẩu
+                  </div>
+                  <input style="font-size: 18px" class="form-control" type="password" placeholder="Mật khẩu" ng-model="user.password">
+                </label>
+                <!-- Password -->
+
+              </div>
+        </div>
+        <button class="btn btn-primary btn-block" ng-click="login(user)">Đăng nhập</button>
+      </div>
+    </div>
+</div>

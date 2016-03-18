@@ -1,0 +1,64 @@
+﻿<div id="top-dealer-filter" class="padding container-fluid">
+    <div class="padding center-form">
+        <!-- info table -->
+        <table border="0" cellpadding="0" cellspacing="0" class="table table-responsive" id="custom-info-table" ng-model="optionInfo">
+            <tr>
+                <th>Công ty:</th>
+                <td>{{selectedInfo.company}}</td>
+            </tr>
+            
+            <tr>
+                <th>Loại đại lý:</th>
+                <td>{{selectedInfo.dealer}}</td>
+            </tr>
+            
+            <tr>
+                <th>Top:</th>
+                <td>{{selectedInfo.top}}</td>
+            </tr>
+
+            <tr>
+                <th>Cấp độ:</th>
+                <td>{{selectedInfo.level}}</td>
+            </tr>
+
+            <tr>
+                <th>Vùng Miền:</th>
+                <td>{{selectedInfo.area}}</td>
+            </tr>
+
+            <tr>
+                <th>Sản phẩm:</th>
+                <td>{{selectedInfo.product}}</td>
+            </tr>
+
+            <tr>
+                <th>Nhãn hiệu:</th>
+                <td>{{selectedInfo.brand}}</td>
+            </tr>
+        </table>
+        <!-- use a responsive table to align everything-->
+        <table border="0" cellpadding="0" cellspacing="0" class="table table-responsive no-border" id="custom-area-table" >
+            <!--First row contains title-->
+            <tr>
+                <th   class="col-sm-1 col-xs-1"> Hạng </th>
+                <th   class="col-sm-3 col-xs-3">Tên đại lý</th>
+                <th   class="col-sm-3 col-xs-3">Địa chỉ</th>
+                <th   class="col-sm-3 col-xs-3">Sản lượng</th>
+                <th  ng-show="is_show_dealer_type" class="col-sm-2 col-xs-2">Mua trực tiếp</th>
+            </tr>
+            <tr ng-repeat="data in data track by data.id">
+                <td>{{data.rank}} </td>
+                <td >{{data.name}}</td>
+                <td >{{data.address}}</td>
+                <td >{{data.yield}}</td>
+                <td ng-show="is_show_dealer_type">{{data.is_direct}}</td>
+
+            </tr>
+           
+        </table>
+        <div>
+            <img class="ms-loading" src="./img/loading-large.gif" alt="Loading" ng-show="isLoading" />
+        </div>
+    </div>
+</div>

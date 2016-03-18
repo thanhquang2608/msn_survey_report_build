@@ -1,0 +1,38 @@
+<div class="ms-container">
+    <h3 class="ms-survey-dealers-title text-center">Danh sách đại lý</h3>
+
+    <div class="ms-info">
+        <div class="info-item">
+            <strong>Công ty:</strong> {{getCompany()}}
+        </div>
+        <div class="info-item">
+            <strong>Đại lý:</strong> {{getBuy()}}
+        </div>
+        <div class="info-item">
+            <strong>Miền:</strong> {{region.name}}
+        </div>
+        <div class="info-item">
+            <strong>Tỉnh:</strong> {{province.name}}
+        </div>
+        <div class="info-item">
+            <strong>Huyện:</strong> {{district.name}}
+        </div>
+        <div class="info-item">
+            <strong>Tổng đại lý:</strong> {{total}}
+        </div>
+    </div>
+
+    <img class="ms-loading" src="./img/loading-large.gif" alt="Loading" ng-hide="dealers"/>
+
+    <ul class="ms-list" infinite-scroll="loadMore()" infinite-scroll-distance="2">
+        <li ng-repeat="dealer in dealers">
+            <div class="list-item" ng-click="showDealer(dealer.DealerId)">
+                <h4 class="name">{{dealer.DealerName}}</h4>
+                <h5 class="description">{{dealer.Address}}</h5>
+            </div>
+        </li>
+    </ul>
+
+    <img class="ms-loading" src="./img/loading-large.gif" alt="Loading" ng-show="isLoading && dealers"/>
+
+</div>

@@ -1,0 +1,82 @@
+{
+    "prepare_queue": {
+        "installed": [],
+        "uninstalled": []
+    },
+    "config_munge": {
+        "files": {
+            "config.xml": {
+                "parents": {
+                    "/*": [
+                        {
+                            "xml": "<feature name=\"Camera\"><param name=\"wp-package\" value=\"Camera\" /></feature>",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<preference name=\"AndroidPersistentFileLocation\" value=\"Internal\" />",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"File\"><param name=\"wp-package\" value=\"File\" /></feature>",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"FileTransfer\"><param name=\"wp-package\" value=\"FileTransfer\" /></feature>",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"Toast\"><param name=\"wp-package\" value=\"Toast\" /></feature>",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"YoikScreenOrientation\"><param name=\"wp-package\" value=\"YoikScreenOrientation\" /></feature>",
+                            "count": 1
+                        }
+                    ]
+                }
+            },
+            "Properties/WMAppManifest.xml": {
+                "parents": {
+                    "/Deployment/App/Capabilities": [
+                        {
+                            "xml": "<Capability Name=\"ID_CAP_ISV_CAMERA\" />",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<Capability Name=\"ID_CAP_MEDIALIB_PHOTO\" />",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<Capability Name=\"ID_CAP_LOCATION\" />",
+                            "count": 1
+                        }
+                    ]
+                }
+            }
+        }
+    },
+    "installed_plugins": {
+        "cordova-plugin-camera": {
+            "PACKAGE_NAME": "{955078f0-c63a-11e5-a4d7-7d6ac915c327}"
+        },
+        "cordova-plugin-file": {
+            "PACKAGE_NAME": "{955078f0-c63a-11e5-a4d7-7d6ac915c327}"
+        },
+        "cordova-plugin-file-transfer": {
+            "PACKAGE_NAME": "{955078f0-c63a-11e5-a4d7-7d6ac915c327}"
+        },
+        "cordova-plugin-geolocation": {
+            "PACKAGE_NAME": "{955078f0-c63a-11e5-a4d7-7d6ac915c327}"
+        },
+        "cordova-plugin-whitelist": {
+            "PACKAGE_NAME": "{955078f0-c63a-11e5-a4d7-7d6ac915c327}"
+        },
+        "cordova-plugin-x-toast": {
+            "PACKAGE_NAME": "{955078f0-c63a-11e5-a4d7-7d6ac915c327}"
+        },
+        "cordova-plugin-screen-orientation": {
+            "PACKAGE_NAME": "{955078f0-c63a-11e5-a4d7-7d6ac915c327}"
+        }
+    },
+    "dependent_plugins": {}
+}

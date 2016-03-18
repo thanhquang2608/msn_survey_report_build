@@ -1,0 +1,77 @@
+<div class="ms-container">
+    <div style="min-height: 300px;">
+        <table class="ms-table">
+            <tbody>
+            <tr>
+                <td class="ms-table-title">Công ty</td>
+                <td>
+                    <input type="checkbox" class="ms-checkbox"
+                           name="ms-company-anco" id="ms-company-anco"
+                           ng-model="company.anco"
+                           ng-disabled="lock.company"
+                           ng-change="updateCompany();dealerCache();"/>
+                    <label for="ms-company-anco"class="ms-checkbox-label">ANCO</label>
+                </td>
+                <td>
+                    <input type="checkbox" class="ms-checkbox"
+                           name="ms-company-conco" id="ms-company-conco"
+                           ng-model="company.conco"
+                           ng-disabled="lock.company"
+                           ng-change="updateCompany();dealerCache();"/>
+                    <label for="ms-company-conco"class="ms-checkbox-label">CONCO</label>
+                </td>
+            </tr>
+            <tr>
+                <td class="ms-table-title">Đại lý</td>
+                <td colspan="2">
+                    <select name="ms-buy" id="ms-buy" class="ms-dropdown" ng-model="buy" ng-change="dealerCache();">
+                        <option value="all" selected>Tất cả</option>
+                        <option value="1">Trực tiếp</option>
+                        <option value="0">Gián tiếp</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td class="ms-table-title">Miền</td>
+                <td colspan="2">
+                    <select name="ms-regions" id="ms-regions" class="ms-dropdown"
+                            ng-model="region"
+                            ng-disabled="lock.region"
+                            ng-change="updateProvince();dealerCache();"
+                            ng-options="region as region.name for region in regions track by region.id">
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td class="ms-table-title">Tỉnh</td>
+                <td colspan="2">
+                    <select name="ms-provinces" id="ms-provinces" class="ms-dropdown"
+                            ng-change="updateDistrict();dealerCache();"
+                            ng-model="province"
+                            ng-disabled="lock.province"
+                            ng-options="province as province.name for province in provinces track by province.id">
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td class="ms-table-title">Huyện</td>
+                <td colspan="2">
+                    <select name="ms-districts" id="ms-districts" class="ms-dropdown"
+                            ng-model="district"
+                            ng-disabled="lock.district"
+                            ng-change="dealerCache();"
+                            ng-options="district as district.name for district in districts track by district.id">
+                    </select>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <button class="btn btn-primary btn-block ms-button" ng-click="showSurvey()">Xem khảo sát</button>
+
+        <div>
+            <img style="width: 120px; height: 120px;" class="ms-loading" src="./img/loading-large.gif" alt="Loading" ng-show="isLoading"/>
+        </div>
+    </div>
+
+    <div class="ms-delay-screen" ng-show="isLoading"></div>
+</div>

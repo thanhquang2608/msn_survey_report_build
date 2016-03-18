@@ -1,0 +1,78 @@
+﻿
+<div id="show-map" class="container-fluid">
+        <div id="search-agency" ng-hide="isPath()">
+        
+                <table border="0" cellpadding="0" cellspacing="0" class="table table-responsive map-table" >
+                    <tr>
+                        <td class="col-sm-9 col-xs-9">
+                            <input id="first-place" class="pac-input chosen controls"
+                                   placeholder="Tìm đại lý:" required>
+                        </td>
+                        <td class="col-sm-1 col-xs-1">
+                            <button class="search-place" ng-click="ChangeCenterOnCurrentPlace()">
+                                <img class="fit-image" id="search-image" />
+                            </button>
+                        </td>
+                        <td class="col-sm-1 col-xs-1">
+                            <button id="find-path" ng-click="OpenFindPathUI()" >
+                                <img class="fit-image" id="bando" />
+                            </button>
+                        </td>
+
+                        <td class="col-sm-1 col-xs-1">
+                            <button ng-click="OpenSetting()" class="agency-option">
+                                <img class="fit-image setting-image"  />
+                            </button>
+                        </td>
+
+                       
+                     </tr>
+                </table>
+            
+            
+            
+    </div>
+
+    <div id="find-path-agency" ng-show="isPath()">
+        <table border="0" cellpadding="0" cellspacing="0" class="table table-responsive map-table" >
+            <tr>
+                <td class="col-sm-10 col-xs-10">
+                    <input id="first-place-path" class="pac-input chosen controls inline"
+                           placeholder="Đi Từ:" required>        
+                </td>
+                <td class="col-sm-1 col-xs-1">
+                    <button id="cancel-find-path" ng-click="OpenFindPlaceUI()">
+                        <img class="fit-image" id="close-white-img" />
+                    </button>
+                </td>
+                <td class="col-sm-1 col-xs-1">
+                    <button id="switch-direction-button" ng-click="SwitchPlace()">
+                        <img class="fit-image" id="swap-direction-image" />
+                    </button>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-sm-9 col-xs-10">
+                    <input id="second-place-path" class="pac-input chosen controls"
+                           placeholder="Đến:" required>
+                </td>
+
+                <td class="col-sm-1 col-xs-1">
+                    <button class="search-place inline" ng-click="FindRoute()">
+                        <img class="fit-image" id="search-path-image" />
+                    </button>
+                </td>
+
+                <td class="col-sm-1 col-xs-1">
+                    <button ng-click="OpenSetting()" class="agency-option">
+                        <img class="fit-image setting-image"  />
+                    </button>
+                </td>
+            </tr>
+        </table>
+     
+    </div>
+    
+    <div id="map" data-tap-disabled="true"></div>
+
+</div>

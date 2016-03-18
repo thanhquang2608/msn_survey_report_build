@@ -1,0 +1,51 @@
+﻿<div id="top-dealer-option" class="padding container-fluid ">
+    <div class="padding center-form">
+        <!-- use a responsive table to align everything-->
+        <table border="0" cellpadding="0" cellspacing="0" class="table table-responsive no-border" id="custom-option-table">
+            <!-- Công ty row with 2 check select button Anco and Conco -->
+            <tr>
+                <th>Công ty</th>
+                <td>
+                    <label>
+                        <input type="checkbox"
+                               ng-model="selected_option.company.anco"
+                               ng-disabled="lock.company">
+                        ANCO
+                    </label>
+                </td>
+                <td>
+                    <label>
+                        <input type="checkbox"
+                               ng-model="selected_option.company.conco"
+                               ng-disabled="lock.company">
+                        CONCO
+                    </label>
+                </td>
+                
+            </tr>
+
+            <!-- The level of area want to check -->
+            <tr>
+                <th> Cấp độ</th>
+                <td colspan="2">
+                    <select class="form-control" ng-model="selected_option.level"
+                            ng-change="UpdateAreas()"
+                            ng-options="level as level.name for level in levels track by level.id"></select>
+                </td>
+            </tr>
+
+            <!-- contain provinces  -->
+            <tr>
+                <th>Miền/Tỉnh</th>
+                <td colspan="2">
+                    <select ng-selected="0" class="form-control"
+                            ng-model="selected_option.area"
+                            ng-options="area as area.name for area in areas track by area.id"></select>
+                </td>
+            </tr>
+
+          
+        </table>
+        <button class="btn btn-primary btn-block" ng-click="viewReport();">Xem</button>
+    </div>
+</div>
