@@ -79,16 +79,17 @@
         alert('Sorry, You have to login again.');
     });
 
+    var noInternet = false;
     $scope.$on(NETWORK_EVENTS.nointernet, function (event) {
-        $ionicLoading.hide();
         //var alertPopup = $ionicPopup.alert({
         //    template: 'Không kết nối được với server'
         //});
-        alert('Không kết nối được với server');
+        if(!noInternet)
+            alert('Không kết nối được với server');
+        noInternet = true;
     });
 
     $scope.$on(NETWORK_EVENTS.timeout, function (event) {
-        $ionicLoading.hide();
         //var alertPopup = $ionicPopup.alert({
         //    template: 'Kết nối timeout'
         //});
@@ -150,6 +151,10 @@
             keyboard: false
         });
 
+        setTimeout(function () {
+            $scope.closeProgress();
+        }, 60000);
+
         $scope.modalProgress.result.then(function (from) {
             $log.info('Loading finished.1');
         }, function () {
@@ -159,6 +164,7 @@
     };
 
     $scope.closeProgress = function () {
+    if( $scope.modalProgress)
         $scope.modalProgress.dismiss("ok");
     };
    

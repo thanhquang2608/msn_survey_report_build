@@ -1,120 +1,116 @@
-﻿<div id="report-survey-option" class="padding container-fluid ">
-    <div class="padding center-form">
+﻿<div class="ms-container" style="padding-left:0;padding-right:0;">
+    <div  style="min-height: 350px;">
         <!-- use a responsive table to align everything-->
-        <table border="0" cellpadding="0" cellspacing="0" class="table table-responsive no-border" id="custom-option-table">
-            <!-- Công ty row with 2 check select button Anco and Conco -->
-            <tr>
-                <th>Công ty</th>
-                <td>
-                        <input type="checkbox" 
+        <table class="ms-table">
+            <tbody>
+                <!-- Công ty row with 2 check select button Anco and Conco -->
+                <tr>
+                    <td class="ms-table-title">Công ty</td>
+                    <td>
+                        <input type="checkbox"
                                class="ms-checkbox"
                                name="company-anco" id="company-anco"
                                ng-model="selected_option.company.anco"
                                ng-change="UpdateCompany();"
-                               ng-disabled="lock.company"> 
-                    <label for="company-anco" class="ms-checkbox-label">
-                        ANCO
-                    </label>
-                </td>
-                <td>
-                        <input type="checkbox" 
+                               ng-disabled="lock.company">
+                        <label for="company-anco" class="ms-checkbox-label">
+                            ANCO
+                        </label>
+                    </td>
+                    <td>
+                        <input type="checkbox"
                                class="ms-checkbox"
                                name="company-conco" id="company-conco"
                                ng-model="selected_option.company.conco"
                                ng-change="UpdateCompany();"
                                ng-disabled="lock.company">
-                    <label for="company-conco" class="ms-checkbox-label">
-                        CONCO
-                    </label>
-                </td>
-            </tr>
+                        <label for="company-conco" class="ms-checkbox-label">
+                            CONCO
+                        </label>
+                    </td>
+                </tr>
 
-            <!-- Sản phẩm row contain drop list of all product-->
-            <tr>
-                <th>Sản phẩm</th>
-                <td colspan="2">
-                    <select class="form-control"
-                            ng-model="selected_option.product"
-                            ng-options="product as product.name for product in products track by product.id"></select>
-                </td>
-            </tr>
+                <!-- Sản phẩm row contain drop list of all product-->
+                <tr>
+                    <td class="ms-table-title">Sản phẩm</td>
+                    <td colspan="2">
+                        <select class="form-control"
+                                ng-model="selected_option.product"
+                                ng-options="product as product.name for product in products track by product.id"></select>
+                    </td>
+                </tr>
 
-            <!-- Đại lý row contain checkbox for direct and indirect option -->
-            <tr>
-                <th>Loại đại lý</th>
-                <td>
+                <!-- Đại lý row contain checkbox for direct and indirect option -->
+                <tr>
+                    <td class="ms-table-title">Loại đại lý</td>
+                    <td>
                         <input type="checkbox"
                                class="ms-checkbox"
                                name="dealer-direct" id="dealer-direct"
                                ng-model="selected_option.dealer.direct">
-                    <label for="dealer-direct" class="ms-checkbox-label">
-                        Trực tiếp
-                    </label>
-                </td>
-                <td>
+                        <label for="dealer-direct" class="ms-checkbox-label">
+                            Trực tiếp
+                        </label>
+                    </td>
+                    <td>
                         <input type="checkbox"
                                class="ms-checkbox"
                                name="dealer-indirect" id="dealer-indirect"
                                ng-model="selected_option.dealer.indirect">
-                    <label for="dealer-indirect" class="ms-checkbox-label">
-                        Gián Tiếp
-                    </label>
-                </td>
-            </tr>
+                        <label for="dealer-indirect" class="ms-checkbox-label">
+                            Gián Tiếp
+                        </label>
+                    </td>
+                </tr>
 
-            <!-- Miền hold all regions -->
-            <tr>
-                <th>Miền</th>
-                <td colspan="2">
-                        <select ng-selected="0"  class="form-control"
-                                ng-change ="UpdateProvince()"
-                                ng-model="selected_option.region" 
+                <!-- Miền hold all regions -->
+                <tr>
+                    <td class="ms-table-title">Miền</td>
+                    <td colspan="2">
+                        <select ng-selected="0" class="ms-dropdown"
+                                ng-change="UpdateProvince()"
+                                ng-model="selected_option.region"
                                 ng-options="region as region.name for region in regions track by region.id"
-                                ng-disabled="lock.region">
-                             
-                        </select>
-                </td>
-            </tr>
+                                ng-disabled="lock.region"></select>
+                    </td>
+                </tr>
 
-            <!-- Tỉnh hold all provinces -->
-            <tr>
-                <th>Tỉnh</th>
-                <td colspan="2">
-                    <select type="select" class="form-control"
-                            ng-change ="UpdateRuralDistricts()"
-                            ng-model="selected_option.province"
-                            ng-options="province as province.name for province in provinces track by province.id"
-                            ng-disabled="lock.province" >
-                    </select>
-                </td>
-            </tr>
+                <!-- Tỉnh hold all provinces -->
+                <tr>
+                    <td class="ms-table-title">Tỉnh</td>
+                    <td colspan="2">
+                        <select type="select" class="ms-dropdown"
+                                ng-change="UpdateRuralDistricts()"
+                                ng-model="selected_option.province"
+                                ng-options="province as province.name for province in provinces track by province.id"
+                                ng-disabled="lock.province"></select>
+                    </td>
+                </tr>
 
-            <!-- Huyện contain all rural districts -->
-            <tr>
-                <th>Huyện</th>
-                <td colspan="2">
-                    <select type="select" class="form-control"
-                            ng-change="UpdateRuralCommunes()"
-                            ng-model="selected_option.rural_district"    
-                            ng-options="rural_district as rural_district.name for rural_district in rural_districts track by rural_district.id"                        
-                            ng-disabled="lock.district;">
-                        
-                    </select>
-                </td>
-            </tr>
+                <!-- Huyện contain all rural districts -->
+                <tr>
+                    <td class="ms-table-title">Huyện</td>
+                    <td colspan="2">
+                        <select type="select" class="ms-dropdown"
+                                ng-change="UpdateRuralCommunes()"
+                                ng-model="selected_option.rural_district"
+                                ng-options="rural_district as rural_district.name for rural_district in rural_districts track by rural_district.id"
+                                ng-disabled="lock.district;"></select>
+                    </td>
+                </tr>
 
-            <!-- Xã contain all rural commune -->
-            <tr>
-                <th>Xã</th>
-                <td colspan="2">
-                    <select type="select" 
-                            ng-model="selected_option.rural_commune" class="form-control"
-                            ng-options="rural_commune as rural_commune.name for rural_commune in rural_communes track by rural_commune.id" 
-                            ng-disabled="lock.commune">
-                    </select>
-                </td>
-            </tr>
+                <!-- Xã contain all rural commune -->
+                <tr>
+                    <td class="ms-table-title">Xã</td>
+                    <td colspan="2">
+                        <select type="select"
+                                ng-model="selected_option.rural_commune" class="ms-dropdown"
+                                ng-options="rural_commune as rural_commune.name for rural_commune in rural_communes track by rural_commune.id"
+                                ng-disabled="lock.commune"></select>
+                    </td>
+                </tr>
+            </tbody>
         </table>
-        <button class="btn btn-primary btn-block" ng-click="viewReport();">Xem Báo Cáo</button>
+        <button class="btn btn-primary btn-block" style="margin-bottom:12px;" ng-click="viewReport();">Xem Báo Cáo</button>
     </div>
 </div>

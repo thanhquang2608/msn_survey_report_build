@@ -1,61 +1,58 @@
-﻿<div id="report-survey-all-province" class="padding container-fluid">
-    <div class="padding center-form">
+﻿<div class="ms-container">
+    <div>
         <!-- info table -->
-        <table border="0" cellpadding="0" cellspacing="0" class="table table-responsive" id="custom-info-table" ng-model="optionInfo">
+        <table style="min-width:400px" id="ms-table" ng-model="optionInfo">
                 <tr >
-                    <th>Công ty:</th>
+                    <td class="ms-table-title">Công ty:</td>
                     <td>{{optionInfo.company}}</td>
                 </tr>
 
                 <tr >
-                    <th >Sản phẩm:</th>
+                    <td class="ms-table-title" >Sản phẩm:</td>
                     <td >{{optionInfo.product}}</td>
                 </tr>
 
                 <tr >
-                    <th >Loại đại lý:</th>
+                    <td class="ms-table-title" >Loại đại lý:</td>
                     <td >{{optionInfo.dealer}}</td>
                 </tr>
 
                 <tr >
-                    <th >Miền:</th>
+                    <td class="ms-table-title" >Miền:</td>
                     <td >{{optionInfo.region}}</td>
                 </tr>
 
                 <tr  ng-show="optionInfo.province">
-                    <th >Tỉnh:</th>
+                    <td class="ms-table-title" >Tỉnh:</td>
                     <td >{{optionInfo.province}}</td>
                 </tr>
 
                 <tr  ng-show="optionInfo.district">
-                    <th >Huyện:</th>
+                    <td class="ms-table-title" >Huyện:</td>
                     <td >{{optionInfo.district}}</td>
                 </tr>
 
                 <tr  ng-show="optionInfo.ward">
-                    <th >Xã:</th>
+                    <td class="ms-table-title" >Xã:</td>
                     <td >{{optionInfo.ward}}</td>
                 </tr>
         </table>
 
         <!-- use a responsive table to align everything-->
-        <table border="0" cellpadding="0" cellspacing="0" class="table table-responsive no-border" id="custom-area-table">
+        <table cellspacing="0" class="table table-responsive" id="custom-area-table">
             <!--First row contains regions-->
             <tr>
                 <!-- First empty cell-->
-                <th rowspan="2" style="padding:0px;"><button class="btn btn-default btn-block cs-btn-switch" ng-hide="1"><span class="glyphicon glyphicon-retweet"></span></button></th>
-                <th colspan="2" class="no-bottom-border" 
-                    ng-repeat="cellrow in first_row track by cellrow.id">{{cellrow.name}}</th>
-
-            </tr>
-
-            <!--Second row display symbol percentage and number-->
-            <tr>
-                <th colspan="2" class="no-top-border" ng-repeat="cellrow in first_row track by cellrow.id">
-                    <div class="row no-space">
+                <th style="padding:0px;"><button class="btn btn-default btn-block cs-btn-switch" ng-hide="1"><span class="glyphicon glyphicon-retweet"></span></button></th>
+                <th colspan="2" ng-repeat="cellrow in first_row track by cellrow.id">
+                    <div class="row">                        
+                        {{cellrow.name}}
+                    </div>
+                    <div class="row">
                         <div class="col-md-6">%</div><div class="col-md-6">SL</div>
                     </div>
                 </th>
+
             </tr>
             <!--Display data from this row-->
             <tr ng-repeat="data in data track by data.id">

@@ -6,18 +6,22 @@
             <tr>
                 <th>Công ty</th>
                 <td>
-                    <label>
                         <input type="checkbox"
+                               class="ms-checkbox"
+                               name="company-anco" id="company-anco"
                                ng-model="selected_option.company.anco"
                                ng-disabled="lock.company">
+                    <label for="company-anco" class="ms-checkbox-label">
                         ANCO
                     </label>
                 </td>
                 <td>
-                    <label>
                         <input type="checkbox"
+                               class="ms-checkbox"
+                               name="company-conco" id="company-conco"
                                ng-model="selected_option.company.conco"
                                ng-disabled="lock.company">
+                    <label for="company-conco" class="ms-checkbox-label">
                         CONCO
                     </label>
                 </td>

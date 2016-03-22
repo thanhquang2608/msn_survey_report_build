@@ -9,6 +9,17 @@
     //areas
     $scope.areas;
 
+    function validation() {
+        if (!$scope.selected_option.company.anco && !$scope.selected_option.company.conco) {
+            alert('Vui lòng chọn công ty.');
+            return false;
+        }
+        if (!$scope.selected_option.dealer.direct && !$scope.selected_option.dealer.indirect) {
+            alert('Vui lòng chọn loại đại lý.');
+            return false;
+        }
+        return true;
+    }
 
     $scope.brands = [
         { id: 'AC', name: "ANCO" },
@@ -58,8 +69,10 @@
 
         
         //Cache the data of this form
-        $scope.CacheData();
-        $state.go("tabs.top-dealer-filter", {}, { reload: true });
+        if (validation()) {
+            $scope.CacheData();
+            $state.go("tabs.top-dealer-filter", {}, { reload: true });
+        }
 
         
     };

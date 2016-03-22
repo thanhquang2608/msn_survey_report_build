@@ -32,7 +32,8 @@ surveyReportApp.controller('SurveyDealerInfoController',
             $scope.brands = res;
         });
 
-        SurveyDealerInfo.getDealerInfo(params).then(function(res) {
+        SurveyDealerInfo.getDealerInfo(params).then(function (res) {
+            console.log(res);
             $scope.info = res.response;
         });
     }

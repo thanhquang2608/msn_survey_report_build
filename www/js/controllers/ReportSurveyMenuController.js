@@ -1,9 +1,14 @@
 ﻿surveyReportApp.controller('ReportSurveyMenuController', function ($scope, $rootScope, $state, AuthService, ShowReportSurveyAPI, $window, USERS) {
     // init services
-    ShowReportSurveyAPI.Init();
+    if(!$rootScope.user_info)
+        $scope.openProgress();
 
-    $scope.isLoading = function () {
-        return !ShowReportSurveyAPI.IsInit();
+    ShowReportSurveyAPI.Init().then(function(){
+        $scope.closeProgress();
+    });
+
+    function isLoading () {
+        $scope.closeProcess();
     };
 
     $scope.logout = function () {

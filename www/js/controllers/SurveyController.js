@@ -119,7 +119,9 @@ surveyReportApp.controller('SurveyController',
                         district: true,
                         company: false
                     };
-                }
+                } 
+                else                
+                    loadCache();
 
                 var user_data = $rootScope.user_info;
 
@@ -133,9 +135,7 @@ surveyReportApp.controller('SurveyController',
                         break;
                     case USERS.NSM:
                 }                
-
-                loadCache();
-
+                
                 if ($scope.region.id !== 'all')
                     $scope.updateProvince();
                 if ($scope.province.id !== 'all')

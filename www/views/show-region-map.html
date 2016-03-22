@@ -1,4 +1,10 @@
 ﻿<div id="show-map" class="container-fluid">
     <div id="map" data-tap-disabled="true"></div>
     <button id="show-top-dealer" class="btn btn-default" ng-click="ShowTopDealer()"> Top Đại lý </button>
+    <div id="legend">
+        <table style="padding:0;margin:0;">
+            <tr ng-repeat="level in levels" ng-show="level.show"><td class="legend-color" ng-style="{'background':level.color}" width="30px"></td><td class="legend-info">{{level.type?' < '+level.yield:' > '+level.yield}}</td></tr>
+            <tr><td colspan="2"> * Tấn</td></tr>
+        </table>
+    </div>
 </div>

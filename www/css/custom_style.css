@@ -80,7 +80,6 @@ table#menu-table-custom td{
 }
 
 table #menu-table-custom h3{
-    font-size: 18px;
     font-family: 'Roboto-black', sans-serif;
 }
 
@@ -141,6 +140,7 @@ table#custom-area-table div{
 #top-dealer-option,
 #report-survey-menu,
 #report-survey-option{
+    min-height:380px;
     max-width:600px; 
     margin:0 auto; 
     margin-top:5px;
@@ -179,7 +179,6 @@ table#custom-area-table div{
     color: white;
     font-weight: bold;
     line-height:50px;
-    font-size:18px;
 }
 .half-image{
     height: 50%;
@@ -188,6 +187,8 @@ table#custom-area-table div{
 .fit-image{
     height:100%;
     width:100%;
+    min-height:30px;
+    min-width:30px;
 }
 
 
@@ -292,7 +293,7 @@ table#custom-area-table div{
 }
 
 /* dynamic text size */
-@media screen and (min-width: 200px) {
+/*@media screen and (min-width: 200px) {
     #top-title {
         font-size: 20px;
     }
@@ -455,7 +456,7 @@ table#custom-area-table div{
         font-family: Roboto !important;
         font-size: 20px !important;
     }
-}
+}*/
 
 
 #search-agency{
@@ -489,6 +490,7 @@ table#custom-area-table div{
   width: 100%;
   padding: 0 11px 0 13px;
   text-overflow: ellipsis;
+  min-height:30px;
 }
 
 .pac-input:focus {
@@ -582,6 +584,16 @@ ul.ui-autocomplete.ui-menu li{
     content:url('../img/setting.png');
     
 }
+/*custom area table*/
+#custom-area-table .row{
+    text-align:center;
+}
+table#custom-area-table{
+    padding:0px;
+}
+table#custom-area-table th, table#custom-area-table td{
+    border:1px solid black;
+}
 /*custom info table*/
 table#custom-info-table  th{
     max-width:150px;
@@ -622,6 +634,7 @@ table#custom-info-table  td{
 }
 
 .ms-table-title {
+    font-weight:bold !important;
     width: 25%;
 }
 
@@ -702,7 +715,6 @@ table#custom-info-table  td{
     font-size: 16px;
     position: fixed;
     left: 0px;
-    bottom: 16px;
     text-align: center;
     outline: none;
     border: none;
@@ -827,4 +839,9 @@ table#custom-info-table  td{
     border:0px;
     padding:0px;
     font-size:24px;
+}
+
+#legend{    
+    background: white;
+    padding: 5px;
 }

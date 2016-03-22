@@ -1,4 +1,4 @@
-var surveyReportApp = angular.module('AncoSurveyReportApp', [ 'LocalStorageModule', 'ct.ui.router.extras', 'ui.bootstrap', 'infinite-scroll']);
+var surveyReportApp = angular.module('AncoSurveyReportApp', [ 'LocalStorageModule', 'ct.ui.router.extras', 'ui.bootstrap', 'infinite-scroll', 'pasvaz.bindonce']);
 
 var appVersion = "1.0.1";
 var appOldVersion = undefined;

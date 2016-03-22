@@ -2,26 +2,27 @@
 surveyReportApp
 .service('ShowReportSurveyAPI', function ($http, NETWORK, $rootScope, $q, REGIONS, USERS, ROLES, PRODUCTS, COMPANIES, AuthService) {
     var serviceBase = NETWORK.API_URL;
-    var brands = null;
-    var isInited = false;
     $rootScope.user_info = null;
 
     // service init
     function init() {
-        if (!brands) {
+        if (!$rootScope.brands) {
             getBrands().then(function (response) {
-                brands = response;
+                $rootScope.brands = response;
             });
         }
 
         if (!$rootScope.user_info) {
             $rootScope.user_info = getUserInfo();
-            
-            getUserRegion($rootScope.user_info.id, $rootScope.user_info.company_name).then(function (response) {
+
+            return getUserRegion($rootScope.user_info.id, $rootScope.user_info.company_name).then(function (response) {
                 $rootScope.user_info.regions = response;
-                isInited = true;
             });
         }
+
+        return $q(function (resolve, reject) {
+            resolve();
+        });
     }
 
     // general function, post and get
@@ -79,7 +80,7 @@ surveyReportApp
         angular.forEach(user.Provinces, function (val, k) {
             provinces.push({ id: val.ProvinceId, name: val.ProvinceName });
         });
-        
+
 
         var user_info = {
             id: user.SaleRepId,
@@ -201,7 +202,7 @@ surveyReportApp
                     return data;
                 });
         }
-   
+
     }
 
 
@@ -211,11 +212,11 @@ surveyReportApp
             //Format:
             //{ id: id of district, 
             //  name: name of the District }
-            
+
             var data = [];
 
             var resData = rawData.response;
-            
+
             data.push({ id: "all", name: "Tất Cả" });
 
             for (var index = 0; index < resData.length; ++index) {
@@ -236,7 +237,7 @@ surveyReportApp
             var data = [];
 
             var resData = rawData.response;
-            
+
             data.push({ id: "all", name: "Tất Cả" });
 
             for (var index = 0; index < resData.length; ++index) {
@@ -245,6 +246,10 @@ surveyReportApp
 
             return data;
         });
+    }
+
+    $rootScope.numberWithCommas = function (x) {
+        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     }
 
     // format yield data
@@ -264,7 +269,6 @@ surveyReportApp
 
         // get data
         var resData = rawData.response;
-
         // check data
         if (!resData || typeof resData === 'undefined' || resData.length == 0) {
             return { first_row: null, first_column: null, data: [{ id: 1, name: "Không có dữ liệu" }] };
@@ -278,20 +282,21 @@ surveyReportApp
         var template_index = [];
         // get the total of the data
         var temp;
-        var  total = [];
+        var total = [];
         for (var i = 0; i < resData.length; i++) {
+
             if (resData[i].name === "Tổng") {
                 temp = resData[i].data;
                 break;
             }
         }
-
+        
         var type;
         var type_value;
         var index = 1;
         if (temp[0].company) {
             type = 'company';
-            type_value = brands;
+            type_value = $rootScope.brands;
         }
         else {
             type = 'region';
@@ -307,13 +312,15 @@ surveyReportApp
                 template_index[value[type]] = 0;
             }
             else {
+                if (value[type] === 'ANCO')
+                    value[type] = 'AC';
                 total.push(value);
                 first_row.push(type_value[value[type]]);
                 template_data.push({ id: value[type], percentage: '0.00%', number: 0 });
                 template_index[value[type]] = index++;
             }
         });
-
+        
         // format the data
         angular.forEach(resData, function (row, key) {
             // get the first column
@@ -327,11 +334,12 @@ surveyReportApp
             angular.forEach(curRow, function (val, k) {
                 var dataTemp = temp.data[template_index[val[type]]];
                 var totalTemp = total[template_index[val[type]]];
+
                 var percent = totalTemp.yield == 0 ? 0 : (val.yield / totalTemp.yield) * 100;
                 percent = percent.toFixed(2) + '%';
 
                 dataTemp.percentage = percent;
-                dataTemp.number = val.yield;
+                dataTemp.number = $rootScope.numberWithCommas(val.yield);
             });
             if (temp.name === "Tổng")
                 data.unshift(temp);
@@ -365,7 +373,7 @@ surveyReportApp
             return { first_row: null, first_column: null, data: [{ id: 1, name: "Không có dữ liệu" }] };
         }
 
-
+        var brands = $rootScope.brands;
         var first_row = [];
         var first_column = [];
         var data = [];
@@ -388,11 +396,11 @@ surveyReportApp
 
             if (val.companyname) {
                 first_row.unshift(brands[val.companyname]);
-                temp.data.unshift({ id: val.companyname, percentage: percent, number: val.yield });
+                temp.data.unshift({ id: val.companyname, percentage: percent, number: $rootScope.numberWithCommas(val.yield) });
             }
             else {
                 first_row.push(brands[val.company]);
-                temp.data.push({ id: val.company, percentage: percent, number: val.yield });
+                temp.data.push({ id: val.company, percentage: percent, number: $rootScope.numberWithCommas(val.yield) });
             }
         });
         data.push(temp);
@@ -446,19 +454,19 @@ surveyReportApp
             for (var j = 0; j < resData[index].surveys.length; ++j) {
                 var agency =
                 {
-                   id: resData[index].dealer_id, 
-                   code: resData[index].dealer_code,
-                   location: {},
-                   title: resData[index].dealer_name,
-                   address: resData[index].dealer_address,
-                   company: resData[index].Company,
+                    id: resData[index].dealer_id,
+                    code: resData[index].dealer_code,
+                    location: {},
+                    title: resData[index].dealer_name,
+                    address: resData[index].dealer_address,
+                    company: resData[index].Company,
                 };
 
                 var survey = resData[index].surveys[j]
                 agency.location = {
                     id: survey.survey_id,
                     latitude: survey.survey_lat,
-                    longtitude:  survey.survey_long,
+                    longtitude: survey.survey_long,
                 };
                 //add
                 data.push(agency);
@@ -470,7 +478,7 @@ surveyReportApp
 
     //get agency at some regions
     function getAgencyAtRegion(region, company) {
-        return CallGetMethod(serviceBase + '/dealer/regions/'+ region + '/company/'+ company, formatAgencyLocationData);
+        return CallGetMethod(serviceBase + '/dealer/regions/' + region + '/company/' + company, formatAgencyLocationData);
     }
 
     // get agency at some provinces
@@ -491,7 +499,7 @@ surveyReportApp
 
     // get Agency area defend on user rank
     function getAgencyAtArea(area_name, areas, company) {
-        
+
         //link these area id together Ex: 103+102+100...
         var area_str = areas[0].id;
 
@@ -499,7 +507,7 @@ surveyReportApp
             area_str = area_str + '+' + areas[index].id;
         }
 
-        
+
         if (area_name === "region") {
             return getAgencyAtRegion(area_str, company);
         }
@@ -512,13 +520,13 @@ surveyReportApp
         else if (area_name === "ward") {
             return getAgencyAtWard(area_str, company);
         }
-        
-        
+
+
     }
-   
+
     //get list of location of agency
     function getAgencyLocation(filter_option) {
-        
+
         var agencyLocation;
         var user = $rootScope.user_info;
         var role = user.role;
@@ -530,7 +538,7 @@ surveyReportApp
             { id: 104, name: 'Nam Sông Hồng' },
             { id: 105, name: 'Bắc Sông Hồng' },
         ]
-        
+
         if (filter_option.is_store) {
             var company = filter_option.company.GetCompanyName();
             if (filter_option.level.code !== "T")
@@ -539,7 +547,7 @@ surveyReportApp
                 agencyLocation = getAgencyAtProvince(filter_option.area.id, company);
         }
         else {
-            
+
             switch (role) {
                 case USERS.NSM:
                     //National user view every region
@@ -549,7 +557,7 @@ surveyReportApp
                     break;
                 case USERS.ASM:
                     //ASM can choose Province
-                    
+
                 case USERS.SUPERVISOR:
                     //SUPERVISOR can choose Province
                     agencyLocation = getAgencyAtProvince(user.provinces[0].id, company);
@@ -557,8 +565,8 @@ surveyReportApp
             }
 
         }
-        
-                
+
+
         return agencyLocation;
     }
 
@@ -583,18 +591,65 @@ surveyReportApp
         });
     }
 
-    // Vùng Chăn nuôi
-    // Get vietnam geojson
-    function loadGeoJson() {
-        return CallGetMethod('./vngeojson/VNM_provinces.geojson', function (response) {
-            return response;
-        });
-    }
+    function getTopDealer(product, brand, condition, detail, company, offset, buy) {
+        return CallGetMethod(serviceBase + '/dealer/report/products/' + product + '/brands/' + brand
+                              + '/conditions/' + condition + '/details/' + detail + '/buy/' + buy
+                              + '/company/' + company + '/offset/' + offset, function (rawData) {
+                                  //Format:
+                                  //{ id: id of province, 
+                                  //  name: name of the province }
 
-    function getMapBoundary(type, id) {
-        return CallGetMethod(serviceBase + '/boundary?type=' + type + '&ids=' + id, function (response) {
-            console.log(response);
-        });
+
+                                  var resData = rawData.response;
+
+                                  var data = [];
+
+                                  for (var index = 0; index < resData.length; ++index) {
+                                      var res = resData[index];
+
+                                      data.push({
+                                          'rank': index + 1, 'id': res.DealerId, 'name': res.DealerName
+                                                  , 'address': res.Address, 'yield': res.sanluong, 'is_direct': "X"
+                                      });
+
+                                  }
+                                  return data;
+                              });
+
+    }
+    return {
+        IsInit: function () { return isInited; },
+        Init: init,
+        GetProduct: getProduct,
+        GetRegion: getRegion,
+        GetProvince: getProvince,
+        GetRuralDistrict: getRuralDistrict,
+        GetRuralCommunes: getRuralCommunes,
+        GetAgencyLocation: getAgencyLocation,
+        GetUserInfo: function () { return $rootScope.user_info; },
+        GetYieldData: getYieldData,
+        GetDealerReport: getDealerReport,
+        GetBrands: getBrands,
+        ClearUserInfo: clearUserInfo,
+        GetTopDealer: getTopDealer,
+    };
+}).service('RegionMapService', function (NETWORK, $rootScope, $q, $http, ShowReportSurveyAPI, USERS) {
+    var serviceBase = NETWORK.API_URL;
+
+    // general function, post and get
+    // function to get data from server by get
+    function CallGetMethod(URL, transition_func) {
+        return $http.get(URL, { timeout: $rootScope.TIME_OUT })
+            .then(function successCallback(response) {
+                //translate the response data to data format
+                // return promise
+                return transition_func(response.data);
+            }, function errorCallback(response) {
+                if (response.status != 0 && response.status != 408) {
+                    console.log("get data failed, statusCode: " + response.status);
+                    return transition_func(null);
+                }
+            });
     }
 
     function CallGetMethod_Map(URL, param, transition_func) {
@@ -606,16 +661,81 @@ surveyReportApp
             }, function errorCallback(response) {
                 if (response.status != 0 && response.status != 408) {
                     console.log("get data failed, statusCode: " + response.status);
-                    return null;
+                    return transition_func(null, null);
                 }
             });
     }
-    
+
+    function loadGeoJson() {
+        return CallGetMethod('./vngeojson/VNM_provinces.geojson', function (response) {
+            return response;
+        });
+    }
+
+    // Vùng Chăn nuôi
+    // Get vietnam geojson
+    function loadProvincesBoundary(provinces_list) {
+        return CallGetMethod('./vngeojson/provinces_boundary.json', function (response) {
+            if (provinces_list) {
+                var result = { index: {}, data: [] };
+                var index = 0;
+                angular.forEach(provinces_list, function (val, k) {
+                    var _id = val.id;
+                    if (response[_id]) {
+                        result.index[_id] = index;
+                        result.data.push(response[_id]);
+                    }
+                });
+                return result;
+            }
+            else
+                return response;
+        });
+    }
+
+    function loadDistrictsBoundary(district_list) {
+        return CallGetMethod('./vngeojson/districts_boundary.json', function (response) {
+            if (district_list) {
+                var result = { index: {}, data: [] };
+                var index = 0;
+                angular.forEach(district_list, function (val, k) {
+                    var _id = val.id;
+                    if (response[_id]) {
+                        result.index[_id] = index;
+                        result.data.push(response[_id]);
+                    }
+                });
+                return result;
+            }
+            else
+                return response;
+        });
+    }
+
+    function loadWardsBoundary(wards_list) {
+        return CallGetMethod('./vngeojson/wards_boundary.json', function (response) {
+            if (wards_list) {
+                var result = { index: {}, data: [] };
+                var index = 0;
+                angular.forEach(wards_list, function (val, k) {
+                    var _id = val.id;
+                    if (response[_id]) {
+                        result.index[_id] = index;
+                        result.data.push(response[_id]);
+                    }
+                });
+                return result;
+            }
+            else
+                return response;
+        });
+    }
+
     function getMapProvinceIndex(region_id, company) {
         return CallGetMethod(serviceBase + '/regions/' + region_id + '/provinces/company/' + company, function (rawData) {
 
             var resData = rawData.response;
-            var data = { index: {}, provinces:[] };
+            var data = { index: {}, provinces: [] };
 
             angular.forEach(resData, function (val, k) {
                 data[val.ProvinceName] = val.ProvinceId;
@@ -628,14 +748,15 @@ surveyReportApp
     function formatMapData(rawData, provinces_index) {
         var resData = rawData.response;
         var result = { index: {}, max: 0, min: 9999999, data: [] };
+        var brands = $rootScope.brands;
 
-                
+
         angular.forEach(resData, function (province, k) {
             var id = provinces_index[province.name];
             if (id) {
                 result.index[id] = k;
-                result.data[k] = { id: id, boundary: null, detail: []}
-                
+                result.data[k] = { id: id, detail: [] }
+
                 angular.forEach(province.data, function (pdata, dk) {
                     if (brands[pdata.company].id !== 'all')
                         result.data[k].detail.push({ id: brands[pdata.company].id, name: brands[pdata.company].name, 'yield': pdata.yield });
@@ -680,56 +801,32 @@ surveyReportApp
 
     }
 
-    function getMapData() {
-        return getRegion().then(function (regions) {
-            return getProvinceData(regions);
-        });
+    function getMapData(type, params) {
+        switch (type) {
+            case 'P':
+                return ShowReportSurveyAPI.GetRegion().then(function (regions) {
+                    return getProvinceData(regions);
+                });
+                break;
+            case 'D':
+                company = $rootScope.user_info.company_name;
+                return ShowReportSurveyAPI.GetProvince().then(function (regions) {
+                    return getDistrictData(regions);
+                });
+                break;
+            case 'W':
+                break;
+        }
     }
 
-    function getTopDealer(product, brand, condition, detail, company, offset, buy) {
-        return CallGetMethod(serviceBase + '/dealer/report/products/' + product + '/brands/' + brand
-                              + '/conditions/' + condition +'/details/' +detail + '/buy/' + buy
-                              + '/company/' + company +'/offset/' + offset, function (rawData) {
-            //Format:
-            //{ id: id of province, 
-            //  name: name of the province }
-
-
-            var resData = rawData.response;
-            
-            var data = [];
-
-            for (var index = 0; index < resData.length; ++index) {
-                var res = resData[index];
-                
-                data.push({'rank': index + 1,'id' : res.DealerId, 'name' : res.DealerName
-                            , 'address' : res.Address, 'yield': res.sanluong , 'is_direct' : "X"});
-                
-            }
-            return data;
-        });
-
-    }
     return {
-        IsInit: function () { return isInited; },
-        Init: init,
-        GetProduct: getProduct,
-        GetRegion: getRegion,
-        GetProvince: getProvince,
-        GetRuralDistrict: getRuralDistrict,
-        GetRuralCommunes: getRuralCommunes,
-        GetAgencyLocation: getAgencyLocation,
-        GetUserInfo: function () { return $rootScope.user_info; },
-        GetYieldData: getYieldData,
-        GetDealerReport: getDealerReport,
-        GerBrands: getBrands,
-        ClearUserInfo: clearUserInfo,
         LoadGeoJson: loadGeoJson,
+        LoadProvincesBoundary: loadProvincesBoundary,
+        LoadDistrictsBoundary: loadDistrictsBoundary,
+        LoadWardsBoundary: loadWardsBoundary,
         GetMapData: getMapData,
-        GetTopDealer : getTopDealer,
-    };
+    }
 })
-
 .service('ReportSurveyOptionCache', function ($rootScope, USERS) {
     var IS_CACHED = false;
     var PRODUCTS_CACHE;
@@ -737,7 +834,7 @@ surveyReportApp
     var REGIONS_CACHE;
     var PROVINCES_CACHE;
     var DISTRICTS_CACHE;
-    var COMMUNES_CACHE ;
+    var COMMUNES_CACHE;
     //default value
     var SELECTED_OPTION_CACHE = {
         product: { id: 'all', name: "Tất Cả" },
@@ -750,7 +847,7 @@ surveyReportApp
                 else if (!this.anco)
                     return ('conco');
                 else if (!this.conco);
-                    return ('anco');
+                return ('anco');
             }
         },
         dealer: { direct: true, indirect: true },
@@ -760,7 +857,7 @@ surveyReportApp
         rural_commune: { id: 'all', name: "Tất Cả" },
 
         top: { id: 100, name: "100" },
-        brand:  { id: 'AC', name: "ANCO" },
+        brand: { id: 'AC', name: "ANCO" },
     };
 
     if (!IS_CACHED) {
@@ -779,7 +876,7 @@ surveyReportApp
         }
     }
 
-    function getProductList(){
+    function getProductList() {
         return PRODUCTS_CACHE;
     }
 
@@ -814,24 +911,24 @@ surveyReportApp
     function CacheDealer(dealers) {
         DEALERS_CACHE = dealers;
     }
-    
-    function CacheRegion(regions){
+
+    function CacheRegion(regions) {
         REGIONS_CACHE = regions;
     }
 
-    function CacheProvince(provinces){
+    function CacheProvince(provinces) {
         PROVINCES_CACHE = provinces;
     }
-        
-    function CacheDistrict(districts){
+
+    function CacheDistrict(districts) {
         DISTRICTS_CACHE = districts;
     }
-        
+
     function CacheCommune(communes) {
         COMMUNES_CACHE = communes;
     }
-    
-    function CacheSelectedOption(selected){
+
+    function CacheSelectedOption(selected) {
         SELECTED_OPTION_CACHE = selected;
     }
 
@@ -862,7 +959,7 @@ surveyReportApp
         CacheSelectedOption: CacheSelectedOption,
     };
 })
-    
+
 .service('ReportSurveyTopDealerOptionCache', function () {
     //default value
     var SELECTED_OPTION_CACHE = {
@@ -887,7 +984,7 @@ surveyReportApp
                 return ('Anco');
             }
         },
-        dealer:{
+        dealer: {
             direct: true,
             indirect: true,
             GetDealerName: function () {
@@ -896,7 +993,7 @@ surveyReportApp
                 else if (!this.indirect)
                     return ('1');
                 else if (!this.direct);
-                    return ('0');
+                return ('0');
             },
             GetDealerViewName: function () {
                 if (this.direct && this.indirect)
@@ -907,18 +1004,18 @@ surveyReportApp
                 return ('Gián tiếp');
             }
         },
-        area : null,
+        area: null,
         level: null,
         top: { id: 100, name: "100" },
         brand: { id: 'AC', name: "ANCO" },
     };
 
-   
+
     function getSelectedOption() {
         return SELECTED_OPTION_CACHE;
     }
 
-   
+
     function CacheSelectedOption(selected) {
         SELECTED_OPTION_CACHE = selected;
     }
@@ -946,13 +1043,13 @@ surveyReportApp
         },
         area: null,
         level: null,
-        is_store : false,
+        is_store: false,
     };
-    
+
     function getSelectedOption() {
-        
+
         return SELECTED_OPTION_CACHE;
-        
+
     }
 
 
@@ -971,7 +1068,7 @@ surveyReportApp
     var COMPANY;
     var DEALER;
     var BUY;
-   
+
     function CacheCompany(company) {
         COMPANY = company;
     }
@@ -1347,16 +1444,16 @@ surveyReportApp
             anco: false,
             conco: false,
             getCompany: function () {
-            if (this.anco && this.conco)
-                return 'all';
-            else if (this.anco)
-                return 'anco';
-            else if (this.conco)
-                return 'conco';
-            else
-                return false;
+                if (this.anco && this.conco)
+                    return 'all';
+                else if (this.anco)
+                    return 'anco';
+                else if (this.conco)
+                    return 'conco';
+                else
+                    return false;
             }
-         };
+        };
 
         _buy = null;
         _region = null;
@@ -1529,7 +1626,7 @@ surveyReportApp
 
 })
 
-.service('RoleService', function($http, $rootScope, NETWORK, $localstorage) {
+.service('RoleService', function ($http, $rootScope, NETWORK, $localstorage) {
     var serviceBase = NETWORK.API_URL;
 
     var _regions,
@@ -1614,6 +1711,4 @@ surveyReportApp
         setCompany: setCompany,
         getCompany: getCompany
     }
-})
-
-;
+});
