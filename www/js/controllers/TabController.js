@@ -84,6 +84,7 @@
         //var alertPopup = $ionicPopup.alert({
         //    template: 'Không kết nối được với server'
         //});
+        $scope.closeProgress();
         if(!noInternet)
             alert('Không kết nối được với server');
         noInternet = true;

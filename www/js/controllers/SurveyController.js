@@ -107,6 +107,9 @@ surveyReportApp.controller('SurveyController',
                     $scope.regions = response;
                 });
 
+                
+                loadCache();
+
                 if (!SurveyCache.isCached()) {
                     $scope.buy = 'all';
                     resetRegion();
@@ -119,9 +122,7 @@ surveyReportApp.controller('SurveyController',
                         district: true,
                         company: false
                     };
-                } 
-                else                
-                    loadCache();
+                }   
 
                 var user_data = $rootScope.user_info;
 

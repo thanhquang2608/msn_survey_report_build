@@ -105,8 +105,10 @@
             if (max < cur)
                 break;
         }
-        if (max > cur)
+        if (max > cur){
+            levels[9].yield -= inc;
             levels[9].type = false;
+            }
 
         $scope.levels = levels;
     }
