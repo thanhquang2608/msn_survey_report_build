@@ -1,38 +1,40 @@
-<div class="ms-container ng-cloak">
-    <h3 class="ms-survey-dealers-title text-center">Danh sách đại lý</h3>
+<div class="ms-container container ng-cloak">
+    <div class="row">
+        <h3 class="ms-survey-dealers-title text-center">Danh sách đại lý</h3>
 
-    <div class="ms-info">
-        <div class="info-item">
-            <strong>Công ty:</strong> {{getCompany()}}
-        </div>
-        <div class="info-item">
-            <strong>Đại lý:</strong> {{getBuy()}}
-        </div>
-        <div class="info-item">
-            <strong>Miền:</strong> {{region.name}}
-        </div>
-        <div class="info-item">
-            <strong>Tỉnh:</strong> {{province.name}}
-        </div>
-        <div class="info-item">
-            <strong>Huyện:</strong> {{district.name}}
-        </div>
-        <div class="info-item">
-            <strong>Tổng đại lý:</strong> {{total}}
-        </div>
-    </div>
-
-    <img class="ms-loading" src="./img/loading-large.gif" alt="Loading" ng-hide="dealers"/>
-
-    <ul class="ms-list" infinite-scroll="loadMore()" infinite-scroll-distance="2" keep-scroll>
-        <li bindonce ng-repeat="dealer in dealers track by dealer.DealerId">
-            <div class="list-item" ng-click="showDealer(dealer.DealerId)">
-                <h4 class="name" bo-bind="dealer.DealerName"></h4>
-                <h5 class="description" bo-bind="dealer.Address"></h5>
+        <div class="ms-info">
+            <div class="info-item">
+                <strong>Công ty:</strong> {{getCompany()}}
             </div>
-        </li>
-        <li>
-            <img class="ms-loading" src="./img/loading-large.gif" alt="Loading" ng-show="isLoading && dealers" />
-        </li>
-    </ul>
+            <div class="info-item">
+                <strong>Đại lý:</strong> {{getBuy()}}
+            </div>
+            <div class="info-item">
+                <strong>Miền:</strong> {{region.name}}
+            </div>
+            <div class="info-item">
+                <strong>Tỉnh:</strong> {{province.name}}
+            </div>
+            <div class="info-item">
+                <strong>Huyện:</strong> {{district.name}}
+            </div>
+            <div class="info-item">
+                <strong>Tổng đại lý:</strong> {{total}}
+            </div>
+        </div>
+
+        <img class="ms-loading" src="./img/loading-large.gif" alt="Loading" ng-hide="dealers"/>
+
+        <ul class="ms-list" infinite-scroll="loadMore()" infinite-scroll-distance="2" keep-scroll>
+            <li bindonce ng-repeat="dealer in dealers track by dealer.DealerId">
+                <div class="list-item" ng-click="showDealer(dealer.DealerId)">
+                    <h4 class="name" bo-bind="dealer.DealerName"></h4>
+                    <h5 class="description" bo-bind="dealer.Address"></h5>
+                </div>
+            </li>
+            <li>
+                <img class="ms-loading" src="./img/loading-large.gif" alt="Loading" ng-show="isLoading && dealers" />
+            </li>
+        </ul>
+    </div>
 </div>
