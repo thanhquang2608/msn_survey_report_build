@@ -25,7 +25,7 @@
     <img class="ms-loading" src="./img/loading-large.gif" alt="Loading" ng-hide="dealers"/>
 
     <ul class="ms-list" infinite-scroll="loadMore()" infinite-scroll-distance="2" keep-scroll>
-        <li bindonce ng-repeat="dealer in dealers">
+        <li bindonce ng-repeat="dealer in dealers track by dealer.DealerId">
             <div class="list-item" ng-click="showDealer(dealer.DealerId)">
                 <h4 class="name" bo-bind="dealer.DealerName"></h4>
                 <h5 class="description" bo-bind="dealer.Address"></h5>

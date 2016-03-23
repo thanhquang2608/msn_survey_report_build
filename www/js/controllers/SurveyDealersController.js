@@ -26,7 +26,7 @@ surveyReportApp.controller('SurveyDealersController',
     };
 
     $scope.loadMore = function() {
-        if ($scope.isContinue && $scope.dealers !== undefined && $scope.dealers.length < $scope.total) {
+        if (!$scope.isLoading && $scope.isContinue && $scope.dealers !== undefined && $scope.dealers.length < $scope.total) {
             $scope.isLoading = true;
             $scope.offset++;
 
