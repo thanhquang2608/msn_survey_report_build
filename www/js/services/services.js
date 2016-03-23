@@ -430,13 +430,30 @@ surveyReportApp
             }
         }
 
-        URL += '/products/' + selectedOption.product + '/buy/' + selectedOption.dealer + '/company/' + selectedOption.company;
+        //if (selectedOption.company === 'all') {
+        //    var anco = URL += '/products/' + selectedOption.product + '/buy/' + selectedOption.dealer + '/company/anco';
+        //    var conco = URL += '/products/' + selectedOption.product + '/buy/' + selectedOption.dealer + '/company/conco';
+        //    var promises;
 
-        // call get data
-        if (selectedOption.ward)
-            return CallGetMethod(URL, formatWardYieldData);
-        else
-            return CallGetMethod(URL, formatYieldData);
+        //    // call get data
+        //    if (selectedOption.ward)
+        //        promises = [CallGetMethod(anco, formatWardYieldData), CallGetMethod(conco, formatWardYieldData)];
+        //    else
+        //        promises = [CallGetMethod(anco, formatYieldData), CallGetMethod(conco, formatYieldData)];
+
+        //    $q.all(promises).then(function(response){
+                
+        //    });
+
+        //} else {
+            URL += '/products/' + selectedOption.product + '/buy/' + selectedOption.dealer + '/company/' + selectedOption.company;
+
+            // call get data
+            if (selectedOption.ward)
+                return CallGetMethod(URL, formatWardYieldData);
+            else
+                return CallGetMethod(URL, formatYieldData);
+        //}
     }
 
     // Bản đồ đại lý
@@ -606,10 +623,18 @@ surveyReportApp
 
                                   for (var index = 0; index < resData.length; ++index) {
                                       var res = resData[index];
+                                      var is_indirect;
+                                      if (res.Company == 0)
+                                          is_indirect = res.GT_AC;
+                                      else if (res.Company == 1)
+                                          is_indirect = res.GT_CC;
 
+                                      if (is_indirect == 0) is_indirect = "X"
+                                      else
+                                          is_indirect = "";
                                       data.push({
                                           'rank': index + 1, 'id': res.DealerId, 'name': res.DealerName
-                                                  , 'address': res.Address, 'yield': res.sanluong, 'is_direct': "X"
+                                                  , 'address': res.Address, 'yield': res.sanluong, 'is_direct': is_indirect
                                       });
 
                                   }
