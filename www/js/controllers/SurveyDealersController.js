@@ -51,6 +51,10 @@ surveyReportApp.controller('SurveyDealersController',
                         $scope.isContinue = false;
                     }
                 }
+            }, function(err) {
+                // IF request error: roll back param
+                $scope.isLoading = false;
+                $scope.offset--;
             });
         }
     };
@@ -102,18 +106,18 @@ surveyReportApp.controller('SurveyDealersController',
 
             var total = false;
 
+            SurveyListDealers.getListOfDealers(params).then(function(res) {
+                $scope.dealers = res;
+                SurveyDealersCache.setDealers($scope.dealers);
+                SurveyDealersCache.cache($scope.dealers && total);
+            });
+
             $scope.total = 'Đang cập nhật';
 
             SurveyListDealers.getNumberOfDealers(params).then(function (res) {
                 total = true;
                 $scope.total = res[0].Total;
                 SurveyDealersCache.setNumberOfDealers($scope.total);
-                SurveyDealersCache.cache($scope.dealers && total);
-            });
-
-            SurveyListDealers.getListOfDealers(params).then(function(res) {
-                $scope.dealers = res;
-                SurveyDealersCache.setDealers($scope.dealers);
                 SurveyDealersCache.cache($scope.dealers && total);
             });
         }

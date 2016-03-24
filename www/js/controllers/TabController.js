@@ -55,9 +55,9 @@
         }
     });
 
-    $rootScope.$on('$stateChangeSuccess', function () {
-        $("html, body").animate({ scrollTop: 0 }, 200);
-    })
+    //$rootScope.$on('$stateChangeSuccess', function () {
+    //    $("html, body").animate({ scrollTop: 0 }, 200);
+    //})
 
     $rootScope.TIME_OUT = 60000;
 
