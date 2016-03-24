@@ -340,6 +340,10 @@
 
         // new map and put it in div "map"
         $scope.map = new google.maps.Map(document.getElementById("map"), mapOptions);
+        if (document.getElementById("show-map").clientHeight === 0) {
+            document.getElementById("show-map").style.height = (document.documentElement.clientHeight - 65) + 'px';
+            document.getElementById("show-map").style.paddingTop = "65px";
+        }
         //init search box
         $scope.AttachSearchUI();
 
