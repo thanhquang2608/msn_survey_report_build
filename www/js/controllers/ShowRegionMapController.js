@@ -114,6 +114,9 @@
     }
 
     function getInfo(id) {
+        if (!$scope.mapData)
+            return null;
+
         var index = $scope.mapData.index[id];
         if (index !== undefined && index !== null)
             return $scope.mapData.data[index].detail;
@@ -188,17 +191,28 @@
     $scope.makeDataLayer = function () {
         var start = new Date().getTime();
         var end;
-        RegionMapService.LoadGeoJson().then(function (geoData) {
+        var mapPromise = RegionMapService.LoadGeoJson().then(function (geoData) {
             $scope.geoData = new google.maps.Data();
             $scope.geoData.addGeoJson(geoData);
             end = new Date().getTime();
             console.log(end - start);
 
             $scope.geoData.setStyle(function (feature) {
-                return {
-                    fillOpacity: 0,
-                    strokeWeight: 0,
-                    zIndex: 1
+                var _id = feature.getProperty('db_id');
+                if (getInfo(_id)) {
+                    return {
+                        fillColor: setMapColor(_id),
+                        fillOpacity: 0.8,
+                        strokeColor: '#b3b3b3',
+                        strokeWeight: 1,
+                        zIndex: 1
+                    }
+                } else {
+                    return {
+                        fillOpacity: 0,
+                        strokeWeight: 0,
+                        zIndex: 1
+                    }
                 }
             });
 
@@ -253,39 +267,42 @@
 
         RegionMapService.GetMapData('P', null).then(function (response) {
             var promises = response;
+            mapPromise.then(function () {
+                angular.forEach(response, function (res, k) {
+                    res.then(function (data) {
+                        if (!$scope.mapData)
+                            $scope.mapData = data;
+                        else
+                            mergeData(data, $scope.mapData);
 
-            angular.forEach(response, function (res, k) {
-                res.then(function (data) {
-                    if (!$scope.mapData)
-                        $scope.mapData = data;
-                    else
-                        mergeData(data, $scope.mapData);
-
-                    if (!$scope.levels)
-                        update_level();
-
-                    $scope.geoData.setStyle(function (feature) {
-                        var _id = feature.getProperty('db_id');
-                        if (getInfo(_id)) {
-                            return {
-                                fillColor: setMapColor(_id),
-                                fillOpacity: 0.8,
-                                strokeColor: '#b3b3b3',
-                                strokeWeight: 1,
-                                zIndex: 1
-                            }
-                        } else {
-                            return {
-                                fillOpacity: 0,
-                                strokeWeight: 0,
-                                zIndex: 1
-                            }
+                        if ($scope.geoData) {
+                            $scope.geoData.setStyle(function (feature) {
+                                var _id = feature.getProperty('db_id');
+                                if (getInfo(_id)) {
+                                    return {
+                                        fillColor: setMapColor(_id),
+                                        fillOpacity: 0.8,
+                                        strokeColor: '#b3b3b3',
+                                        strokeWeight: 1,
+                                        zIndex: 1
+                                    }
+                                } else {
+                                    return {
+                                        fillOpacity: 0,
+                                        strokeWeight: 0,
+                                        zIndex: 1
+                                    }
+                                }
+                            });
                         }
+
+                        if (!$scope.levels)
+                            update_level();
+
+                        $scope.closeProgress();
                     });
-                    
-                    $scope.closeProgress();
                 });
-            });
+            })
         });
         
         ////////////////////////////////////////////////////////////////////////

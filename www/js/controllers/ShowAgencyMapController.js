@@ -179,17 +179,20 @@
 
             switch ($scope.agencyLocation[index].company) {
                 case 0:
-                    image.url = 'img/AC-icon.png';
+                    image.url = 'img/ac.png';
                     priority = 100;
                     break;
                 case 1:
+                    image.url = 'img/pc.png';
+                    priority = 100;
+                    break;
                 case 2:
-                    image.url = 'img/PC-icon.png';
+                    image.url = 'img/both.png';
                     priority = 100;
                     break;
                 default:
                     priority = 10;
-                    image.url = 'img/Diff-icon.png';
+                    image.url = 'img/other.png';
                  
             }
             // put a marker on that location

@@ -430,30 +430,13 @@ surveyReportApp
             }
         }
 
-        //if (selectedOption.company === 'all') {
-        //    var anco = URL += '/products/' + selectedOption.product + '/buy/' + selectedOption.dealer + '/company/anco';
-        //    var conco = URL += '/products/' + selectedOption.product + '/buy/' + selectedOption.dealer + '/company/conco';
-        //    var promises;
+        URL += '/products/' + selectedOption.product + '/buy/' + selectedOption.dealer + '/company/' + selectedOption.company;
 
-        //    // call get data
-        //    if (selectedOption.ward)
-        //        promises = [CallGetMethod(anco, formatWardYieldData), CallGetMethod(conco, formatWardYieldData)];
-        //    else
-        //        promises = [CallGetMethod(anco, formatYieldData), CallGetMethod(conco, formatYieldData)];
-
-        //    $q.all(promises).then(function(response){
-                
-        //    });
-
-        //} else {
-            URL += '/products/' + selectedOption.product + '/buy/' + selectedOption.dealer + '/company/' + selectedOption.company;
-
-            // call get data
-            if (selectedOption.ward)
-                return CallGetMethod(URL, formatWardYieldData);
-            else
-                return CallGetMethod(URL, formatYieldData);
-        //}
+        // call get data
+        if (selectedOption.ward)
+            return CallGetMethod(URL, formatWardYieldData);
+        else
+            return CallGetMethod(URL, formatYieldData);
     }
 
     // Bản đồ đại lý

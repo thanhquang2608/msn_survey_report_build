@@ -293,30 +293,8 @@ table#custom-area-table div{
 }
 
 /* dynamic text size */
-/*@media screen and (min-width: 200px) {
-    #top-title {
-        font-size: 20px;
-    }
-
-    table#menu-table-custom h3 {
-        font-size: 20px;
-    }
-
-    table#custom-table .th {
-        font-size: 16px;
-    }
-
-    table#custom-table label {
-        font-size: 14px;
-    }
-
-    table#custom-area-table th{
-        font-size: 15px;
-    }
-
-    table#custom-area-table td{
-        font-size: 10px;
-    }
+@media screen and (min-width: 200px) {
+    
     .pac-input, ul.ui-autocomplete.ui-menu li{
         font-size : 16px;
         height: 35px;
@@ -335,29 +313,7 @@ table#custom-area-table div{
 }
 
 @media screen and (min-width: 600px) {
-    #top-title{
-        font-size:24px;
-    }
-
-    table#menu-table-custom h3 {
-        font-size: 22px;
-    }
     
-    table#custom-table th{
-        font-size:18px;
-    }
-    
-    table#custom-table label{
-        font-size:16px;
-    }
-
-    table#custom-area-table th{
-        font-size: 14px;
-    }
-
-    table#custom-area-table td{
-        font-size: 12px;
-    }
     .pac-input, ul.ui-autocomplete.ui-menu li{
         font-size : 18px;
         height: 40px;
@@ -376,29 +332,7 @@ table#custom-area-table div{
 }
 
 @media screen and (min-width: 800px) {
-    #top-title{
-        font-size:26px;
-    }
 
-    table#menu-table-custom h3 {
-        font-size: 24px;
-    }
-
-    table#custom-table th{
-        font-size:20px;
-    }
-    
-    table#custom-table label{
-        font-size:18px;
-    }
-
-    table#custom-area-table th{
-        font-size: 16px;
-    }
-
-    table#custom-area-table td{
-        font-size: 14px;
-    }
     .pac-input, ul.ui-autocomplete.ui-menu li{
         font-size : 20px;
         height: 45px;
@@ -417,30 +351,7 @@ table#custom-area-table div{
 }
 
 @media screen and (min-width: 1000px) {
-    #top-title{
-        font-size:28px;
-    }
-
-    table#menu-table-custom h3 {
-        font-size: 26px;
-    }
-    
-    table#custom-table th{
-        font-size:22px;
-    }
-    
-    table#custom-table label{
-        font-size:20px;
-    }
-
-    table#custom-area-table th{
-        font-size: 18px;
-    }
-
-    table#custom-area-table td{
-        font-size: 16px;
-    }
-
+   
     .pac-input, ul.ui-autocomplete.ui-menu li{
         font-size : 24px;
         height: 50px;
@@ -456,7 +367,7 @@ table#custom-area-table div{
         font-family: Roboto !important;
         font-size: 20px !important;
     }
-}*/
+}
 
 
 #search-agency{
