@@ -283,6 +283,8 @@ table#custom-area-table div{
     position: fixed;
     padding : 0px !important;
     width: 100%;
+    height: -webkit-calc(100% - 65px);
+    height: -moz-calc(100% - 65px);
     height: calc(100% - 65px);
     background-size: cover;
     overflow: hidden;
