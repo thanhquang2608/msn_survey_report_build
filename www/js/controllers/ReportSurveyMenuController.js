@@ -1,4 +1,4 @@
-﻿surveyReportApp.controller('ReportSurveyMenuController', function ($scope, $rootScope, $state, AuthService, ShowReportSurveyAPI, $window, USERS) {
+﻿surveyReportApp.controller('ReportSurveyMenuController', function ($scope, $rootScope, $state, AuthService, ShowReportSurveyAPI, $window, USERS,AgencyFilterCache) {
     // init services
     if(!$rootScope.user_info)
         $scope.openProgress();
@@ -12,6 +12,7 @@
     };
 
     $scope.logout = function () {
+        AgencyFilterCache.Clear();
         AuthService.logout();
         ShowReportSurveyAPI.ClearUserInfo();
         $state.go('login');

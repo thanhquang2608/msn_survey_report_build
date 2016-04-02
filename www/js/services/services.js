@@ -1153,12 +1153,13 @@ surveyReportApp
         },
         area: null,
         level: null,
-        is_store: true,
+        is_store: false,
     };
-
-    init();
+    
     function init() {
+        SELECTED_OPTION_CACHE.is_store = true;
         var user_info = $rootScope.user_info;
+        if (!user_info) return;
         switch (user_info.role) {
 
             case USERS.RSM:
@@ -1192,9 +1193,28 @@ surveyReportApp
         }
 
 
-         
+        return SELECTED_OPTION_CACHE;
     }
-
+    function clear() {
+        SELECTED_OPTION_CACHE = {
+            company: {
+                anco: false,
+                conco: false,
+                GetCompanyName: function () {
+                    if (this.anco && this.conco)
+                        return ('all');
+                    else if (!this.anco)
+                        return ('conco');
+                    else if (!this.conco);
+                    return ('anco');
+                }
+            },
+            area: null,
+            level: null,
+            is_store: false,
+        };
+        
+    }
     function getSelectedOption() {
 
         return SELECTED_OPTION_CACHE;
@@ -1208,6 +1228,8 @@ surveyReportApp
     }
 
     return {
+        Init: init,
+        Clear: clear,
         GetSelectedOption: getSelectedOption,
         CacheSelectedOption: CacheSelectedOption,
     };
@@ -1346,6 +1368,7 @@ surveyReportApp
     };
 
     var logout = function () {
+        
         destroyUserCredentials();
     };
 

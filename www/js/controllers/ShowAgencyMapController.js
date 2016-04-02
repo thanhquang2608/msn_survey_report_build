@@ -637,12 +637,11 @@
         controlDiv.index = 1;
         map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(controlDiv);
     }
-
-
-
     
     $scope.filter_option = AgencyFilterCache.GetSelectedOption();
-    
+    if (!$scope.filter_option.is_store) {
+        $scope.filter_option = AgencyFilterCache.Init();
+    }
     ShowReportSurveyAPI.GetAgencyLocation($scope.filter_option).then(function (response) {
         $scope.agencyLocation = response;
 
