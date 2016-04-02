@@ -137,8 +137,7 @@ surveyReportApp.controller('SurveyController',
                     case USERS.NSM:
                 }                
                 
-                if ($scope.region.id !== 'all')
-                    $scope.updateProvince();
+                $scope.updateProvince();
                 if ($scope.province.id !== 'all')
                     $scope.updateDistrict();
             }
@@ -196,10 +195,8 @@ surveyReportApp.controller('SurveyController',
             }
 
             function resetRegion() {
-                $scope.region = {
-                    id: 'all',
-                    name: 'Cả nước'
-                };
+                if ($scope.regions)
+                    $scope.region = $scope.regions[0];
             }
 
             function resetProvince() {

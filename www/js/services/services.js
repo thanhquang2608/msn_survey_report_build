@@ -15,6 +15,21 @@ surveyReportApp
         if (!$rootScope.user_info) {
             $rootScope.user_info = getUserInfo();
 
+            if ($rootScope.user_info.role === USERS.NSM || $rootScope.user_info.role === USERS.RSM) {
+                $rootScope.user_info.provinces = [];
+                var company = $rootScope.user_info.role === USERS.NSM ? 'all' : $rootScope.user_info.company_name;
+                getRegion().then(function (regions) {
+                    angular.forEach(regions, function (region, k) {
+                        getProvince(region.id, company).then(function (provinces) {
+                            angular.forEach(provinces, function (province, pk) {
+                                if (province.id !== 'all')
+                                    $rootScope.user_info.provinces.push(province);
+                            });
+                        });
+                    });
+                });
+            }
+
             return getUserRegion($rootScope.user_info.id, $rootScope.user_info.company_name).then(function (response) {
                 $rootScope.user_info.regions = response;
             });
@@ -77,10 +92,6 @@ surveyReportApp
         var user = AuthService.user();
         var provinces = [];
 
-        angular.forEach(user.Provinces, function (val, k) {
-            provinces.push({ id: val.ProvinceId, name: val.ProvinceName });
-        });
-
 
         var user_info = {
             id: user.SaleRepId,
@@ -89,8 +100,12 @@ surveyReportApp
             company_name: user.AC_PC ? 'conco' : 'anco',
             role: null,
             regions: null,
-            provinces: provinces,
+            provinces: [],
         }
+
+        angular.forEach(user.Provinces, function (val, k) {
+            user_info.provinces.push({ id: val.ProvinceId, name: val.ProvinceName });
+        });
 
         if (user.RoleId)
             user_info.role = USERS[ROLES[user.RoleId]];
@@ -143,25 +158,35 @@ surveyReportApp
                 break;
             case USERS.RSM:
             case USERS.NSM:
-                return CallGetMethod(serviceBase + '/regions', function (rawData) {
-                    //Format:
-                    //{ id: id of region, 
-                    //  name: name of the region }
+                //return CallGetMethod(serviceBase + '/regions', function (rawData) {
+                //    //Format:
+                //    //{ id: id of region, 
+                //    //  name: name of the region }
 
-                    if (!rawData)
-                        return [{ id: -1, name: 'Không có dữ liệu.' }];
+                //    if (!rawData)
+                //        return [{ id: -1, name: 'Không có dữ liệu.' }];
 
-                    var data = [];
+                //    var data = [];
 
-                    var resData = rawData.response;
+                //    var resData = rawData.response;
 
-                    data.push({ id: "all", name: "Cả Nước" });
+                //    data.push({ id: "all", name: "Cả Nước" });
 
-                    for (var index = 0; index < resData.length; ++index) {
-                        data.push({ id: resData[index].RegionId, name: resData[index].RegionName });
-                    }
+                //    for (var index = 0; index < resData.length; ++index) {
+                //        data.push({ id: resData[index].RegionId, name: resData[index].RegionName });
+                //    }
 
-                    return data;
+                //    return data;
+                //});
+
+                return $q(function (resolve, reject) {
+                    var regions = [];
+                    angular.forEach(REGIONS, function (val, k) {
+                        if (k !== '-1') {
+                            regions.push({ id: val.id, name: val.fullname });
+                        }
+                    });
+                    resolve(regions);
                 });
         }
     }
@@ -452,6 +477,13 @@ surveyReportApp
         for (var index = 0; index < resData.length; ++index) {
             //for all survey in that agency
             for (var j = 0; j < resData[index].surveys.length; ++j) {
+                var brand;
+
+                if (resData[index].brands)
+                    brand = resData[index].brands.split(",");
+                else 
+                    brand = null;
+
                 var agency =
                 {
                     id: resData[index].dealer_id,
@@ -460,6 +492,7 @@ surveyReportApp
                     title: resData[index].dealer_name,
                     address: resData[index].dealer_address,
                     company: resData[index].Company,
+                    brand: brand ,
                 };
 
                 var survey = resData[index].surveys[j]
@@ -674,98 +707,122 @@ surveyReportApp
             });
     }
 
+    // load old boundary
     function loadGeoJson() {
         return CallGetMethod('./vngeojson/VNM_provinces.geojson', function (response) {
             return response;
         });
     }
 
-    // Vùng Chăn nuôi
-    // Get vietnam geojson
-    function loadProvincesBoundary(provinces_list) {
+    // Get provinces boundary
+    function loadProvincesBoundary() {
         return CallGetMethod('./vngeojson/provinces_boundary.json', function (response) {
-            if (provinces_list) {
-                var result = { index: {}, data: [] };
-                var index = 0;
-                angular.forEach(provinces_list, function (val, k) {
-                    var _id = val.id;
-                    if (response[_id]) {
-                        result.index[_id] = index;
-                        result.data.push(response[_id]);
-                    }
-                });
-                return result;
-            }
-            else
+            //if (provinces_list) {
+            //    var result = {};
+            //    var index = 0;
+            //    angular.forEach(provinces_list, function (val, k) {
+            //        var _id = val.id;
+            //        if (response[_id]) {
+            //            result[_id] = response[_id];
+            //        }
+            //    });
+            //    return result;
+            //}
+            //else
                 return response;
         });
     }
 
-    function loadDistrictsBoundary(district_list) {
+    // Get districts boundary
+    function loadDistrictsBoundary() {
         return CallGetMethod('./vngeojson/districts_boundary.json', function (response) {
-            if (district_list) {
-                var result = { index: {}, data: [] };
-                var index = 0;
-                angular.forEach(district_list, function (val, k) {
-                    var _id = val.id;
-                    if (response[_id]) {
-                        result.index[_id] = index;
-                        result.data.push(response[_id]);
-                    }
-                });
-                return result;
-            }
-            else
+            //if (district_list) {
+            //    var result = {};
+            //    var index = 0;
+            //    angular.forEach(district_list, function (val, k) {
+            //        var _id = val.id;
+            //        if (response[_id]) {
+            //            result[_id] = response[_id];
+            //        }
+            //    });
+            //    return result;
+            //}
+            //else
                 return response;
         });
     }
 
-    function loadWardsBoundary(wards_list) {
+    // Get wards boundary
+    function loadWardsBoundary() {
         return CallGetMethod('./vngeojson/wards_boundary.json', function (response) {
-            if (wards_list) {
-                var result = { index: {}, data: [] };
-                var index = 0;
-                angular.forEach(wards_list, function (val, k) {
-                    var _id = val.id;
-                    if (response[_id]) {
-                        result.index[_id] = index;
-                        result.data.push(response[_id]);
-                    }
-                });
-                return result;
-            }
-            else
+            //if (wards_list) {
+            //    var result = {};
+            //    var index = 0;
+            //    angular.forEach(wards_list, function (val, k) {
+            //        var _id = val.id;
+            //        if (response[_id]) {
+            //            result[_id] = response[_id];
+            //        }
+            //    });
+            //    return result;
+            //}
+            //else
                 return response;
         });
     }
 
-    function getMapProvinceIndex(region_id, company) {
-        return CallGetMethod(serviceBase + '/regions/' + region_id + '/provinces/company/' + company, function (rawData) {
-
-            var resData = rawData.response;
-            var data = { index: {}, provinces: [] };
-
-            angular.forEach(resData, function (val, k) {
-                data[val.ProvinceName] = val.ProvinceId;
-            });
-
-            return data;
+    function loadDefaultList() {
+        return CallGetMethod('./vngeojson/default_list.json', function (response) {
+                return response;
         });
     }
 
-    function formatMapData(rawData, provinces_index) {
+    // load boundary
+    function loadBoundary(type) {
+        switch (type) {
+            case 'P':
+                return loadProvincesBoundary();
+                break;
+            case 'D':
+                return loadDistrictsBoundary();
+                break;
+            case 'W':
+                return loadWardsBoundary();
+                break;
+            default:
+                return null;
+                break;
+        }
+    }
+
+    // make index
+    function indexData(data) {
+        var index = {};
+        angular.forEach(data, function (val, k) {
+            if (val.id === -1)
+                return null;
+
+            if (val.id !== 'all') {
+                index[val.name] = val.id;
+            }
+        })
+        return index;
+    }
+
+    // format map data
+    function formatMapData(rawData, index) {
         var resData = rawData.response;
         var result = { index: {}, max: 0, min: 9999999, data: [] };
         var brands = $rootScope.brands;
 
 
-        angular.forEach(resData, function (province, k) {
-            var id = provinces_index[province.name];
+        angular.forEach(resData, function (rData, k) {
+            var id = index[rData.name];
             if (id) {
                 result.index[id] = k;
-                result.data[k] = { id: id, detail: [] }
+                result.data[k] = { id: id, name: rData.name, detail: [] }
 
-                angular.forEach(province.data, function (pdata, dk) {
+                angular.forEach(rData.data, function (pdata, dk) {
                     if (brands[pdata.company].id !== 'all')
                         result.data[k].detail.push({ id: brands[pdata.company].id, name: brands[pdata.company].name, 'yield': pdata.yield });
                     else {
@@ -779,7 +836,6 @@ surveyReportApp
                 });
             }
         });
-
         return result;
     }
 
@@ -792,21 +848,70 @@ surveyReportApp
 
         angular.forEach(regions, function (region, k) {
             if (region.id !== 'all') {
-                promises.push(getMapProvinceIndex(region.id, company).then(function (provinces_index) {
-                    return CallGetMethod_Map(serviceBase + '/yield/regions/' + region.id + '/products/all/buy/all/company/' + company, provinces_index, formatMapData);
-                }));
+                promises.push(
+                    ShowReportSurveyAPI.GetProvince(region.id, company).then(function (provinces_list) {
+                        var provinces_index = indexData(provinces_list);
+                        return CallGetMethod_Map(serviceBase + '/yield/regions/' + region.id + '/products/all/buy/all/company/' + company, provinces_index, formatMapData);
+                    }));
             }
         });
 
         return promises;
     }
 
-    function getDistrictData(provinces_list) {
+    function getDistrictData(provinces) {
+        var promises = [];
+        var company = $rootScope.user_info.company_name;
+        if ($rootScope.user_info.role === USERS.NSM) {
+            company = 'all';
+        }
 
+
+        angular.forEach(provinces, function (province, k) {
+            if (province.id !== 'all') {
+                promises.push(
+                    ShowReportSurveyAPI.GetRuralDistrict(province.id).then(function (districts_list) {
+                        var r_id = province.region_id;
+                        var p_id = province.id;
+                        var districts_index = indexData(districts_list);
+                        return CallGetMethod_Map(serviceBase + '/yield/regions/' + r_id + '/provinces/' + p_id + '/products/all/buy/all/company/' + company, districts_index, formatMapData);
+                    }));
+            }
+        });
+
+        return $q(function (resolve, reject) {
+            resolve(promises);
+        });
     }
 
-    function getWardData(districts_list) {
+    function getWardData(provinces) {
+        var promises = [];
+        var company = $rootScope.user_info.company_name;
+        if ($rootScope.user_info.role === USERS.NSM) {
+            company = 'all';
+        }
 
+        angular.forEach(provinces, function (province, k) {
+            ShowReportSurveyAPI.GetRuralDistrict(province.id).then(function (districts_list) {
+                angular.forEach(districts_list, function (district, dk) {
+                    if (district.id !== 'all') {
+                        promises.push(
+                            ShowReportSurveyAPI.GetRuralCommunes(district.id).then(function (wards_list) {
+                                var r_id = province.region_id;
+                                var p_id = province.id;
+                                var d_id = district.id;
+                                var wards_index = indexData(wards_list);
+                                return CallGetMethod_Map(serviceBase + '/yield/regions/' + r_id + '/provinces/' + p_id + '/districts/' + d_id + '/products/all/buy/all/company/' + company, wards_index, formatMapData);
+                            })
+                            );
+                    }
+                });
+            });
+        });
+
+        return $q(function (resolve, reject) {
+            resolve(promises);
+        });
     }
 
     function getMapData(type, params) {
@@ -817,21 +922,18 @@ surveyReportApp
                 });
                 break;
             case 'D':
-                company = $rootScope.user_info.company_name;
-                return ShowReportSurveyAPI.GetProvince().then(function (regions) {
-                    return getDistrictData(regions);
-                });
+                return getDistrictData(params);
                 break;
             case 'W':
+                return getWardData(params);
                 break;
         }
     }
 
     return {
+        LoadDefaultList: loadDefaultList,
         LoadGeoJson: loadGeoJson,
-        LoadProvincesBoundary: loadProvincesBoundary,
-        LoadDistrictsBoundary: loadDistrictsBoundary,
-        LoadWardsBoundary: loadWardsBoundary,
+        LoadBoundary: loadBoundary,
         GetMapData: getMapData,
     }
 })
@@ -1034,7 +1136,7 @@ surveyReportApp
     };
 })
 //cache Agency Filter Controller data
-.service('AgencyFilterCache', function () {
+.service('AgencyFilterCache', function ($rootScope, USERS) {
     //default value
     var SELECTED_OPTION_CACHE = {
         company: {
@@ -1051,8 +1153,47 @@ surveyReportApp
         },
         area: null,
         level: null,
-        is_store: false,
+        is_store: true,
     };
+
+    init();
+    function init() {
+        var user_info = $rootScope.user_info;
+        switch (user_info.role) {
+
+            case USERS.RSM:
+            case USERS.NSM:
+                SELECTED_OPTION_CACHE.level = { id: 0, name: "Miền", code: "M" };
+                SELECTED_OPTION_CACHE.area = user_info.regions[0];
+                break;
+
+            default:
+                SELECTED_OPTION_CACHE.level = { id: 0, name: "Tỉnh", code: "T" };
+                SELECTED_OPTION_CACHE.area = user_info.provinces[0];
+
+        }
+
+
+        switch (user_info.role) {
+            case USERS.SUPERVISOR:
+            case USERS.ASM:
+            case USERS.RSM:
+                if (user_info.company) {
+                    SELECTED_OPTION_CACHE.company.anco = false;
+                    SELECTED_OPTION_CACHE.company.conco = true;
+                } else {
+                    SELECTED_OPTION_CACHE.company.anco = true;
+                    SELECTED_OPTION_CACHE.company.conco = false;
+                }
+                break;
+            case USERS.NSM:
+                SELECTED_OPTION_CACHE.company.anco = true;
+                SELECTED_OPTION_CACHE.company.conco = true;
+        }
+
+
+         
+    }
 
     function getSelectedOption() {
 

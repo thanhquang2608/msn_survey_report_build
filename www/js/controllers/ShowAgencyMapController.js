@@ -176,10 +176,27 @@
             //push a marker to search box
             //+1 for index because the autocomplete Jquery does not receive value 0
             $scope.places.push({ "value": index + 1, "label": title });
-
+            var brand = $scope.agencyLocation[index].brand;
             switch ($scope.agencyLocation[index].company) {
                 case 0:
-                    image.url = 'img/ac.png';
+                    if (brand)
+                        switch (brand[0]) {
+                            case "AC":
+                                image.url = 'img/ac-anco.png';
+                                break;
+
+                            case "AM":
+                                image.url = 'img/ac-a&m.png';
+                                break;
+
+                            case "GN":
+                                image.url = 'img/ac-guinniess.png';
+                                break;
+                               
+                        }
+                    else
+                        image.url = 'img/ac.png';
+
                     priority = 100;
                     break;
                 case 1:
@@ -187,12 +204,9 @@
                     priority = 100;
                     break;
                 case 2:
-                    image.url = 'img/both.png';
-                    priority = 100;
-                    break;
-                default:
-                    priority = 10;
                     image.url = 'img/other.png';
+                    priority = 10;
+                    break;
                  
             }
             // put a marker on that location
@@ -216,14 +230,14 @@
             if (agency.code)
                 contentString = contentString + '<p class = "info-text-style"> <b>Mã đại lý:</b>  ' + agency.code + '</p>';
             else
-                contentString = contentString + '<p class = "info-text-style"> <b>Mã đại lý:</b>  ' + 'Không có dữ liệu' + '</p>';
+                contentString = contentString + '<p class = "info-text-style"> <b>Mã đại lý:</b>  ' + 'Không có' + '</p>';
             if (agency.address)
                 contentString = contentString + '<p class = "info-text-style"> <b>Địa chỉ:</b>  ' + agency.address + '</p>' + '</div>';
             else
-                contentString = contentString + '<p class = "info-text-style"> <b>Địa chỉ:</b>  ' + 'Không Có dữ liệu' + '</p>' + '</div>';
+                contentString = contentString + '<p class = "info-text-style"> <b>Địa chỉ:</b>  ' + 'Không Có' + '</p>' + '</div>';
 
-            contentString = contentString + '<button class = "info-text-style pull-right btn btn-default col-sm-6 col-xs-6 " ng-click="ShowWayTo()"> Chỉ đường</a>' + '</button>';
-            contentString = contentString + '<button class = "info-text-style pull-right btn btn-default col-sm-6 col-xs-6 " ng-click="ShowInfoDealer()"> Thông Tin </a>' + '</button>';
+            contentString = contentString + '<table style="width:100%" ><tr> <td><button class = "info-text-style btn btn-default col-sm-6 col-xs-6" style ="width:95%" ng-click="ShowWayTo()"> Chỉ đường</a>' + '</td></button>';
+            contentString = contentString + '<td><button class = "info-text-style btn btn-default" style ="width:95%" ng-click="ShowInfoDealer()"> Thông Tin </a>' + '</button></td></tr></table>';
            
 
             //compile the HTML code for angular js binding
@@ -651,7 +665,8 @@
         $scope.directionsDisplay.setMap($scope.map);
 
         $scope.info_window = new google.maps.InfoWindow({
-            content: ""
+            content: "",
+            
         });
 
         

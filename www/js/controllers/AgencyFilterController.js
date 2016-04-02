@@ -62,35 +62,19 @@
 
 
 
-        if (!selected_option.level) {
-            switch (user_info.role) {
-                case USERS.SUPERVISOR:
-                case USERS.ASM:
-                case USERS.RSM:
-                    if (user_info.company) {
-                        $scope.selected_option.company.anco = false;
-                        $scope.selected_option.company.conco = true;
-                    } else {
-                        $scope.selected_option.company.anco = true;
-                        $scope.selected_option.company.conco = false;
-                    }
-                    $scope.lock.company = true;
-                    break;
-                case USERS.NSM:
-                    $scope.selected_option.company.anco = true;
-                    $scope.selected_option.company.conco = true;
-            }
-
-
-            $scope.selected_option.level = $scope.levels[0];
-            $scope.UpdateAreas();
+        
+        switch (user_info.role) {
+            case USERS.SUPERVISOR:
+            case USERS.ASM:
+            case USERS.RSM:
+                $scope.lock.company = true;
+                break;   
         }
-        else {
-            if (selected_option.level.code === "T")
-                $scope.areas = $scope.userData.provinces;
-            else
-                $scope.areas = $scope.regions;
-        }
+        if (selected_option.level.code === "T")
+            $scope.areas = $scope.userData.provinces;
+        else
+            $scope.areas = $scope.regions;
+        
 
     }
 

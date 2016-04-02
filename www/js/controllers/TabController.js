@@ -79,17 +79,7 @@
         alert('Sorry, You have to login again.');
     });
 
-    var noInternet = false;
-    $scope.$on(NETWORK_EVENTS.nointernet, function (event) {
-        //var alertPopup = $ionicPopup.alert({
-        //    template: 'Không kết nối được với server'
-        //});
-        $scope.closeProgress();
-        if(!noInternet)
-            alert('Không kết nối được với server');
-        noInternet = true;
-    });
-
+    
     $scope.$on(NETWORK_EVENTS.timeout, function (event) {
         //var alertPopup = $ionicPopup.alert({
         //    template: 'Kết nối timeout'

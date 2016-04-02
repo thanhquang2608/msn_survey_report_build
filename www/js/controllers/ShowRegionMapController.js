@@ -5,12 +5,13 @@
     // get agency location from API on init
     $scope.agencyLocation;
     var formatNumber = $rootScope.numberWithCommas;
-    var agency_index = [];
+    // only one info
     var info = new google.maps.InfoWindow();
+    // legend's levels
     var level = [];
 
     // legend
-    var color = ['#ffb366', '#ffa64d', '#ff9933', '#ff8c1a', '#ff8000', '#e67300', '#cc6600', '#b35900', '#994d00', '#804000']
+    var color = ['#ffb366', '#ffa64d', '#ff9933', '#ff8c1a', '#ff8000', '#e67300', '#cc6600', '#b35900', '#994d00', '#804000'];
     $scope.levels;
 
     //map
@@ -24,9 +25,16 @@
 
     //geo weight
     $scope.mapData;
-    
-    //geo data
-    $scope.geoData;
+
+    // hold current boundaries data
+    var polygons;
+    var type = "P";
+
+    // boundaries
+    $scope.boundaries;
+
+    // default list
+    $scope.defaultList;
 
     //change the center of the map
     $scope.ChangeCenter = function (id) {
@@ -56,31 +64,6 @@
     }
 
     function update_level() {
-        //var temp = $scope.mapData.data;
-        //temp.sort(compare);
-
-        //var len = temp.length;
-        //var median = 0;
-        //var q1 = 0;
-        //var q3 = 0;
-
-        //if (len % 2 == 0) {
-        //    var mid = len / 2;
-        //    median = (temp[mid].detail[0].yield + temp[mid + 1].detail[0].yield) / 2;
-        //} else {
-        //    var mid = ceil(len / 2);
-        //    median = temp[mid].detail[0].yield;
-        //}
-
-        //if (len % 4 == 0) {
-        //    var q = len / 4;
-        //    q1 = (temp[q].detail[0].yield + temp[q + 1].detail[0].yield) / 2;
-        //    q3 = (temp[q * 3].detail[0].yield + temp[q * 3 + 1].detail[0].yield) / 2;
-        //} else {
-        //    var q = ceil(len / 4);
-        //    q1 = (temp[q].detail[0].yield + temp[q + 1].detail[0].yield) / 2;
-        //    q3 = (temp[q * 3].detail[0].yield + temp[q * 3 + 1].detail[0].yield) / 2;
-        //}
 
         var min = $scope.mapData.min;
         var max = $scope.mapData.max;
@@ -105,10 +88,11 @@
             if (max < cur)
                 break;
         }
-        if (max > cur){
+
+        if (max > cur) {
             levels[9].yield -= inc;
             levels[9].type = false;
-            }
+        }
 
         $scope.levels = levels;
     }
@@ -123,6 +107,35 @@
         else
             return null;
     }
+
+    function getBoundary(id) {
+        if(!$scope.boundaries)
+            return null;
+
+        var boundary = $scope.boundaries[id];
+        if (boundary)
+            return boundary;
+        else
+            return null;
+    }
+
+    function updatePolygons() {
+        if (!polygons)
+            return;
+
+        angular.forEach(polygons, function (val, k) {
+            val.setMap(null);
+        });
+
+        polygons = [];
+        angular.forEach($scope.mapData.index, function (val, k) {
+            var boundary = getBoundary(k);
+            if (!polygons)
+                polygons = addPolygon(boundary);
+            else
+                polygons = polygons.concat(addPolygon(boundary));
+        });
+    }
     
     function mergeData(src, dest) {
         var curID = dest.data.length;
@@ -130,7 +143,9 @@
         if (dest.max < src.max) {
             dest.max = src.max;
             update_level();
+            updatePolygons();
         }
+
         if (dest.min > src.min)
             dest.min = src.min;
 
@@ -140,20 +155,59 @@
         });
     }
 
+    function setStyle(feature) {
+        var _id = feature.getProperty('db_id');
+        if (getInfo(_id)) {
+            return {
+                fillColor: setMapColor(_id),
+                fillOpacity: 0.8,
+                strokeColor: '#b3b3b3',
+                strokeWeight: 1,
+                zIndex: 1
+            }
+        } else {
+            return {
+                fillOpacity: 0,
+                strokeWeight: 0,
+                zIndex: 1
+            }
+        }
+    }
+
+    function addBoundary(id) {
+        var mapInfo = getInfo(id);
+        var boundary = getBoundary(id);
+
+        if (mapInfo && boundary) {
+            var polygon = new google.maps.Polygon({
+                id: val.id,
+                name: val.name,
+                paths: google.maps.geometry.encoding.decodePath(bval),
+                fillColor: setMapColor(id),
+                fillOpacity: 0.8,
+                strokeColor: '#b3b3b3',
+                strokeWeight: 1,
+                zIndex: 1
+            });
+            return polygon;
+        } else
+            return null;
+    }
+
     //make data layer
-    var polygon = [];
     $scope.makeDataLayerTest = function () {
-        RegionMapService.LoadDistrictsBoundary(null).then(function (response) {
+        RegionMapService.LoadBoundary('P', null).then(function (response) {
+            boundaries = response;
+
             angular.forEach(response, function (val, k) {
                 angular.forEach(val.boundary, function (bval, bk) {
                     var p = new google.maps.Polygon({
                         id: val.id,
                         name: val.name,
                         paths: google.maps.geometry.encoding.decodePath(bval),
-                        strokeColor: '#00FF00',
-                        strokeOpacity: 0.8,
-                        strokeWeight: 1,
-                        fillOpacity: 0.5
+                        fillOpacity: 0,
+                        strokeWeight: 0,
+                        zIndex: 1
                     });
 
                     p.addListener('click', function (e) {
@@ -177,71 +231,42 @@
 
                 });
             });
+
+            $scope.closeProgress();
         });
     }
 
-    function updateLayer(layer) {
-        var layerMap = layer.getMap();
-        if (layerMap)
-            layer.setMap(null);
-        else
-            layer.setMap($scope.map);
-    }
+    function addPolygon(boundary) {
+        if (!boundary)
+            return [];
 
-    $scope.makeDataLayer = function () {
-        var start = new Date().getTime();
-        var end;
-        var mapPromise = RegionMapService.LoadGeoJson().then(function (geoData) {
-            $scope.geoData = new google.maps.Data();
-            $scope.geoData.addGeoJson(geoData);
-            end = new Date().getTime();
-            console.log(end - start);
-
-            $scope.geoData.setStyle(function (feature) {
-                var _id = feature.getProperty('db_id');
-                if (getInfo(_id)) {
-                    return {
-                        fillColor: setMapColor(_id),
-                        fillOpacity: 0.8,
-                        strokeColor: '#b3b3b3',
-                        strokeWeight: 1,
-                        zIndex: 1
-                    }
-                } else {
-                    return {
-                        fillOpacity: 0,
-                        strokeWeight: 0,
-                        zIndex: 1
-                    }
-                }
+        var polygons = [];
+        angular.forEach(boundary.boundary, function (val, k) {
+            var polygon = new google.maps.Polygon({
+                id: boundary.id,
+                name: boundary.name,
+                paths: google.maps.geometry.encoding.decodePath(val),
+                fillColor: setMapColor(boundary.id),
+                fillOpacity: 0.8,
+                strokeColor: '#b3b3b3',
+                strokeWeight: 1,
+                zIndex: 1
             });
 
-            $scope.geoData.addListener('mouseover', function (e) {
-                $scope.geoData.overrideStyle(e.feature, {
-                    strokeColor: '#2a2a2a',
-                    strokeWeight: 2,
-                    zIndex: 2
-                });
-            });
-
-            $scope.geoData.addListener('mouseout', function (e) {
-                $scope.geoData.revertStyle();
-            });
-
-            $scope.geoData.addListener('click', function (e) {
+            polygon.addListener('click', function (e) {
                 info.close();
 
-                var map_info = getInfo(e.feature.getProperty('db_id'));
+                var map_info = getInfo(this.id);
 
                 var content;
 
                 if (!map_info)
-                    content = '<h3><b>' + e.feature.getProperty('NAME_1') + '</b></h3>' +
+                    content = '<h3><b>' + this.name + '</b></h3>' +
                       '<div>' +
                         '<p class = "info-text-style"> Không được phép truy cập</p>' +
                       '</div>';
                 else {
-                    content = '<h3><b>' + e.feature.getProperty('NAME_1') + '</b></h3>' +
+                    content = '<h3><b>' + this.name + '</b></h3>' +
                       '<div><table style="border:0px;">';
                     angular.forEach(map_info, function (data, k) {
                         content += '<tr class = "info-text-style"><th>' + data.name + ':</th><td style="text-align:right;">' + formatNumber(data.yield) + ' tấn</td></tr>';
@@ -251,7 +276,6 @@
 
                 info.setContent(content);
 
-
                 var anchor = new google.maps.MVCObject();
 
                 anchor.set("position", e.latLng);
@@ -260,12 +284,22 @@
 
             });
 
-            $scope.geoData.setMap($scope.map);
+            polygon.setMap($scope.map);
+
+            polygons.push(polygon);
         });
+        
+        return polygons;
+    }
+
+    $scope.makeDataLayer = function (type, param) {
+        var mapPromise = RegionMapService.LoadBoundary(type).then(function (boundariesData) {
+            $scope.boundaries = boundariesData;
+        }); 
         
         ////////////////////////////////////////////////////////////////////////
 
-        RegionMapService.GetMapData('P', null).then(function (response) {
+        RegionMapService.GetMapData(type, param).then(function (response) {
             var promises = response;
             mapPromise.then(function () {
                 angular.forEach(response, function (res, k) {
@@ -275,29 +309,16 @@
                         else
                             mergeData(data, $scope.mapData);
 
-                        if ($scope.geoData) {
-                            $scope.geoData.setStyle(function (feature) {
-                                var _id = feature.getProperty('db_id');
-                                if (getInfo(_id)) {
-                                    return {
-                                        fillColor: setMapColor(_id),
-                                        fillOpacity: 0.8,
-                                        strokeColor: '#b3b3b3',
-                                        strokeWeight: 1,
-                                        zIndex: 1
-                                    }
-                                } else {
-                                    return {
-                                        fillOpacity: 0,
-                                        strokeWeight: 0,
-                                        zIndex: 1
-                                    }
-                                }
-                            });
-                        }
-
                         if (!$scope.levels)
                             update_level();
+
+                        angular.forEach(data.index, function (val, k) {
+                            var boundary = getBoundary(k);
+                            if (!polygons)
+                                polygons = addPolygon(boundary);
+                            else
+                                polygons = polygons.concat(addPolygon(boundary));
+                        });
 
                         $scope.closeProgress();
                     });
@@ -369,6 +390,35 @@
         }
     }
 
+    function getBoundaries(provinces_list) {
+        var zoom = $scope.map.getZoom();
+        console.log(zoom);
+        prevType = type;
+
+        // uncomment de test
+        /*
+        if (zoom < 10) {
+            type = "P";
+        } else if (zoom < 13) {
+            type = "D";
+        } else {
+            type = "W";
+        }
+        */
+
+        type = "P";
+
+        if (type !== "P" || prevType !== type) {
+
+            angular.forEach(polygons, function (val, k) {
+                val.setMap(null);
+            });
+            $scope.mapData = null;
+            $scope.boundaries = null;
+            $scope.levels = null;
+            $scope.makeDataLayer(type, provinces_list);
+        }
+    }
 
     $scope.initMap = function () {
         // map option
@@ -398,15 +448,60 @@
         $scope.map.controls[google.maps.ControlPosition.TOP_RIGHT].push(topDealer);
         $scope.map.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(legend);
 
+        google.maps.event.addListener($scope.map, "click", function (event) {
+            info.close();
+        });
     };
 
     $scope.ShowTopDealer = function () {
         $state.go("tabs.top-dealer-option", {}, { reload: false });
     }
 
+    $scope.loadDefaultList = function () {
+        return RegionMapService.LoadDefaultList().then(function (response) {
+            $scope.defaultList = response;
+
+            $scope.map.addListener('idle', function () {
+                var bounds = $scope.map.getBounds();
+                var ne = bounds.getNorthEast(); // LatLng of the north-east corner
+                var sw = bounds.getSouthWest(); // LatLng of the south-west corder
+
+                var top = ne.lat();
+                var bottom = sw.lat();
+                var right = ne.lng();
+                var left = sw.lng();
+
+                var provinces = $scope.defaultList;
+                var province_list = [];
+
+                angular.forEach(provinces, function (val, k) {
+                    if (!((val.top > top && val.bottom > top) || (val.top < bottom && val.bottom < bottom))
+                        &&
+                        !((val.left > right && val.right > right) || (val.left < left && val.right < left))
+                        ) {
+                        province_list.push(val);
+                    }
+                });
+                for (var i = 0, len = provinces.length; i < len; i++) {
+                    var val = provinces[i];
+                    if (!((val.top > top && val.bottom > top) || (val.Top < bottom && val.bottom < bottom))
+                        &&
+                        !((val.left > right && val.right > right) || (val.left < left && val.right < left))
+                        ) {
+                        province_list.push(val);
+                    }
+                }
+
+                getBoundaries(province_list);
+
+            });
+        });
+    }
+
     angular.element(document).ready(function () {
         $scope.openProgress();
         $scope.initMap();
-        $scope.makeDataLayer();
+        $scope.loadDefaultList();
+        $scope.makeDataLayer('P', null);
     });
 });

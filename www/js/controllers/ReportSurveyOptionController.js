@@ -89,6 +89,7 @@
         $scope.UpdateRegion = function () {
             ShowReportSurveyAPI.GetRegion().then(function (response) {
                 $scope.regions = response;
+                $scope.regions.unshift({id:'all', name:'Cả Nước'});
                 $scope.lock.region = false;
             });                       
         }
