@@ -1,5 +1,5 @@
 ﻿surveyReportApp.controller('ShowAgencyMapController', function ($scope, $interval, $rootScope, $state, AgencyFilterCache, AgencyDealerCache,
-                                                                AuthService, ShowReportSurveyAPI, USERS, $compile, $filter) {
+                                                                AuthService, ShowReportSurveyAPI, USERS, $compile, $filter,BRANDS) {
 
     $scope.openProgress();
     // one agency Location consists of:
@@ -181,15 +181,15 @@
                 case 0:
                     if (brand)
                         switch (brand[0]) {
-                            case "AC":
+                            case "AC_AC":
                                 image.url = 'img/ac-anco.png';
                                 break;
 
-                            case "AM":
+                            case "AC_AM":
                                 image.url = 'img/ac-a&m.png';
                                 break;
 
-                            case "GN":
+                            case "AC_GN":
                                 image.url = 'img/ac-guinniess.png';
                                 break;
                                
@@ -200,7 +200,34 @@
                     priority = 100;
                     break;
                 case 1:
-                    image.url = 'img/pc.png';
+                    if (brand)
+                        switch (brand[0]) {
+                            case "CC_CC":
+                                image.url = 'img/cc_cc.png';
+                                break;
+                            case "CC_PC":
+                                image.url = 'img/cc_pc.png';
+                                break;
+                            case "CC_AM":
+                                image.url = 'img/cc_am.png';
+                                break;
+                            case "CC_BO":
+                                image.url = 'img/cc_bo.png';
+                                break;
+                            case "CC_SM":
+                                image.url = 'img/cc_sm.png';
+                                break;
+                            case "CC_DL":
+                                image.url = 'img/cc_dl.png';
+                                break;
+                            case "CC_FF":
+                                image.url = 'img/cc_ff.png';
+                                break;
+                            default :
+                                image.url = 'img/cc.png';
+                        }       
+                    else
+                        image.url = 'img/cc.png';
                     priority = 100;
                     break;
                 case 2:
@@ -232,10 +259,22 @@
             else
                 contentString = contentString + '<p class = "info-text-style"> <b>Mã đại lý:</b>  ' + 'Không có' + '</p>';
             if (agency.address)
-                contentString = contentString + '<p class = "info-text-style"> <b>Địa chỉ:</b>  ' + agency.address + '</p>' + '</div>';
+                contentString = contentString + '<p class = "info-text-style"> <b>Địa chỉ:</b>  ' + agency.address + '</p>' ;
             else
-                contentString = contentString + '<p class = "info-text-style"> <b>Địa chỉ:</b>  ' + 'Không Có' + '</p>' + '</div>';
+                contentString = contentString + '<p class = "info-text-style"> <b>Địa chỉ:</b>  ' + 'Không Có' + '</p>' ;
 
+            contentString = contentString + '<p class = "info-text-style"> <b>Nhãn Hàng:</b>  ';
+            if (agency.brand) {
+                contentString += BRANDS[agency.brand[0]];
+                var i;
+                for (i = 1 ; i < agency.brand.length ; ++i) {
+                    contentString +=  ', ' + BRANDS[agency.brand[i]] ;
+                }
+                contentString += '</p>';
+            }
+            else {
+                contentString += 'Không Có' + '</p>'
+            }
             contentString = contentString + '<table style="width:100%" ><tr> <td><button class = "info-text-style btn btn-default col-sm-6 col-xs-6" style ="width:95%" ng-click="ShowWayTo()"> Chỉ đường</a>' + '</td></button>';
             contentString = contentString + '<td><button class = "info-text-style btn btn-default" style ="width:95%" ng-click="ShowInfoDealer()"> Thông Tin </a>' + '</button></td></tr></table>';
            
@@ -374,6 +413,9 @@
          //   $scope.setCenterMap($user_info.provinces[0].name);
         $scope.setCenterMap('Viet Nam', new google.maps.LatLng(15.42525, 106.76514));
 
+        google.maps.event.addListener($scope.map, "click", function (event) {
+            info.close();
+        });
     };
 
 

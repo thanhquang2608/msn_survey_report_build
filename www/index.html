@@ -86,8 +86,24 @@
         </div>
     </script>
 
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCWkGFbaSYpSjhJmdl8jOaCj8CYhsRR3dc&sensor=false&libraries=places&libraries=visualization&libraries=geometry" async defer></script>
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
+    <script type="text/ng-template" id="errorModalContent.html">
+        <div class="modal-header no-margin-bot">
+            <div>
+                <h4 class="no-margin-bot">Thông báo</h4>
+            </div>
+        </div>
+        <div class="modal-body">
+            <div class="alert alert-danger no-margin-bot">
+                <div>{{message}}</div>
+            </div>
+        </div>
+        <div class="modal-footer no-margin-bot">
+            <button type="button" class="btn btn-default" ng-click="cancel()">Đóng</button>
+        </div>
+    </script>
+
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC83L6L5KItj4dS7NDqHjH6twAwRYnQ1OE&sensor=false&libraries=places&libraries=visualization&libraries=geometry" async defer></script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 </body>
 </html>

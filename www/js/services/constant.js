@@ -82,3 +82,30 @@ surveyReportApp.constant('AUTH_EVENTS', {
     4: 'RSM',
     5: 'NSM',
 })
+
+.constant('BRANDS', {
+    'AC_AC': 'ANCO',
+    'AC_AM':  'A&M',
+    'AC_GN':  'GUINNESS',
+
+    // 'CG': 'CARGILL',
+    // 'CP': 'CP',
+
+    // 'DB': 'DABACO',
+    // 'DH' : 'DEHUES',
+    // 'GF': 'GREEN FEED',
+  
+    // 'JF': "JAPFA",
+    // 'LT': "LÁI THIÊU",
+    // 'NH': "NEW HOPE",
+    // 'UP': 'UP',
+
+    'CC_CC' : 'CONCO',
+    'CC_PC' : 'FORCY',
+    'CC_AM' : 'AMI',
+    'CC_BO' : 'BIG ONE',
+    'CC_SM' : 'SUMO',
+    'CC_DL' : 'DELICE',
+    'CC_FF': 'FRANCE FEED',
+    // 'CC_O': 'Khác',
+})

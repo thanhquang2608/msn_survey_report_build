@@ -47,6 +47,15 @@
 
     }
 
+    function clone(obj) {
+        if (null == obj || "object" != typeof obj) return obj;
+        var copy = obj.constructor();
+        for (var attr in obj) {
+            if (obj.hasOwnProperty(attr)) copy[attr] = obj[attr];
+        }
+        return copy;
+    }
+
     function compare(a, b) {
         var A = a.details[0], B = b.detail[0];
 
@@ -304,8 +313,11 @@
             mapPromise.then(function () {
                 angular.forEach(response, function (res, k) {
                     res.then(function (data) {
-                        if (!$scope.mapData)
-                            $scope.mapData = data;
+                       if (!$scope.mapData) {
+                            $scope.mapData = clone(data);
+                            $scope.mapData.data = [];
+                            $scope.mapData.data = $scope.mapData.data.concat(data.data);
+                        }
                         else
                             mergeData(data, $scope.mapData);
 

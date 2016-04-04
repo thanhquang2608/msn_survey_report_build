@@ -25,12 +25,12 @@
 
         function validate() {
             if(!$scope.selected_option.company.anco && !$scope.selected_option.company.conco){
-                alert("Vui lòng chọn công ty.");
+                $rootScope.processMessageError("Vui lòng chọn công ty.");
                 return false;
             }
 
             if (!$scope.selected_option.dealer.direct && !$scope.selected_option.dealer.indirect) {
-                alert("Vui lòng chọn loại đại lý.")
+                $rootScope.processMessageError("Vui lòng chọn loại đại lý.")
                 return false;
             }
             return true;
@@ -98,7 +98,7 @@
         $scope.UpdateProvince = function () {
             if ($scope.selected_option.region.id !== 'all') {
                 if (!$scope.selected_option.company.anco && !$scope.selected_option.company.conco) {
-                    alert('Vui lòng chọn công ty.');
+                    $rootScope.processMessageError('Vui lòng chọn công ty.');
                     return;
                 }
                 ShowReportSurveyAPI.GetProvince($scope.selected_option.region.id
