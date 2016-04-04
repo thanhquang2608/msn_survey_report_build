@@ -414,7 +414,7 @@
         $scope.setCenterMap('Viet Nam', new google.maps.LatLng(15.42525, 106.76514));
 
         google.maps.event.addListener($scope.map, "click", function (event) {
-            info.close();
+            $scope.info_window.close();
         });
     };
 
