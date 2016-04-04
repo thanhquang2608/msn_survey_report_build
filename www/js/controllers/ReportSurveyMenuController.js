@@ -30,7 +30,7 @@
 
     // on click show region feature
     $scope.OnClickShowSurveyResultByRegion = function () {
-        $state.go("tabs.show-region-map", {}, { reload: true });
+        $state.go("tabs.show-region-map");
     }
 
     // on click Survey

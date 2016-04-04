@@ -78,9 +78,14 @@ surveyReportApp.config(['$stateProvider', '$stickyStateProvider', '$urlRouterPro
 
             //show the important region map
             .state('tabs.show-region-map', {
+                sticky: true,
                 url: '/show-region-map',
-                templateUrl: 'views/show-region-map.html',
-                controller: "ShowRegionMapController"
+                views: {
+                    'show-region-map' : {
+                        templateUrl: 'views/show-region-map.html',
+                        controller: "ShowRegionMapController"
+                    }
+                }               
             })
 
             // load view login
