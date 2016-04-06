@@ -10,6 +10,10 @@
   <preference name="windows-target-version" value="8.1" />
   <!-- Support for Cordova 5.0.0 plugin system -->
   <plugin name="cordova-plugin-whitelist" version="1" />
+  <plugin name="cordova-plugin-device-motion" version="1.2.0" />
+  <plugin name="cordova-plugin-device-orientation" version="1.0.2"/>
+  <plugin name="cordova-plugin-geolocation" version="1.0.1"/>
+  <plugin name="cordova-plugin-statusbar" version="2.1.2"/>
   <allow-intent href="http://*/*" />
   <allow-intent href="https://*/*" />
   <allow-intent href="tel:*" />
