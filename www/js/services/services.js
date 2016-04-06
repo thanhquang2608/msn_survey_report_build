@@ -950,16 +950,6 @@ surveyReportApp
                 break;
         }
     }
-    // Leak memory google map
-    var mapObj = null;
-
-    function _getMap() {
-        return mapObj;
-    }
-
-    function _setMap(obj) {
-        mapObj = obj;
-    }
 
     return {
         LoadDefaultList: loadDefaultList,
@@ -967,9 +957,6 @@ surveyReportApp
         LoadBoundary: loadBoundary,
         GetMapData: getMapData,
         GetProvinceDataByRegion: getProvinceDataByRegion,
-        getMap: _getMap,
-        setMap: _setMap
-
     }
 })
 .service('ReportSurveyOptionCache', function ($rootScope, USERS) {

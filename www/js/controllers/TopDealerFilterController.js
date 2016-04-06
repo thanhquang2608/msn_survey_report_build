@@ -65,6 +65,7 @@
                                          area_type, area_id, selectedOption.company.GetCompanyName()
                                          , selectedOption.top.id, dealer_type)
             .then(function (response) {
+                console.log(response);
                 $scope.data = response;
                 $scope.isLoading = false;
             });;

@@ -98,7 +98,7 @@ surveyReportApp.controller('SurveyController',
 
                 $scope.isLoading = true;
 
-                $state.go("tabs.survey-dealers", {}, { reload: true });
+                $state.go("tabs.survey-dealers", {}, { reload: false });
             };
 
             // Define private functions
@@ -180,12 +180,12 @@ surveyReportApp.controller('SurveyController',
 
             function validate() {
                 if (!$scope.company.getCompany()) {
-                    alert('Vui lòng chọn công ty');
+                    $rootScope.processMessageError('Vui lòng chọn công ty');
                     return false;
                 }
 
                 if (!$scope.region) {
-                    alert('Vui lòng chọn vùng miền');
+                    $rootScope.processMessageError('Vui lòng chọn vùng miền');
                     return false;
                 }
 
