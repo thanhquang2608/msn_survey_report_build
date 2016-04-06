@@ -310,7 +310,7 @@
 
     $scope.makeDataLayer = function (type, param) {
         var isFirst = true;
-        var delay = 0;
+        var delay = 1000;
 
         var mapPromise = RegionMapService.LoadBoundary(type).then(function (boundariesData) {
             $scope.boundaries = boundariesData;
@@ -338,12 +338,11 @@
                             isFirst = false;
                             draw(data);
                         } else {
-                            return;
-                            delay += 500;
+                            delay += 1500;
 
-                            if (delay > 2000) {
-                                delay = 2000;
-                            }
+                            // if (delay > 2000) {
+                            //     delay = 2000;
+                            // }
 
                             $scope.closeProgress();
 
