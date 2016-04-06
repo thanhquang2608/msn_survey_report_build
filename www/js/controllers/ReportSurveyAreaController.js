@@ -5,7 +5,7 @@
     $scope.first_row;
     $scope.first_column;
     $scope.isLoading = true;
-    $scope.viewType = 2;
+    $scope.viewType = 1;
 
     $scope.dataViewType2 = {
         columns : [],
