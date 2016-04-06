@@ -5,6 +5,12 @@
     $scope.first_row;
     $scope.first_column;
     $scope.isLoading = true;
+    $scope.viewType = 2;
+
+    $scope.dataViewType2 = {
+        columns : [],
+        rows : []
+    }
 
     $scope.option = {
         company: null,
@@ -37,8 +43,68 @@
             $scope.first_column = response.first_column;
             $scope.data = response.data;
             $scope.isLoading = false;
+
+            // Tạm thời xong thì tính luôn, nếu chậm thì có thể bỏ, khi nào
+            // người dùng nhấn button thì mới tính
+            generateDataViewType2($scope.first_row, $scope.data);
+
+            console.log($scope.data);
+            console.log($scope.dataViewType2);
         });
     };
+
+    function generateDataViewType2(columns, data) {
+        if (!columns || !data) return;
+
+        // Tạo cột
+        // Bắt đầu từ 1 để bỏ dòng tổng
+        for (var i = 1, len = data.length; i < len; i++) {
+            var row = data[i];
+            var col = {
+                id : row.id,
+                name : row.name
+            }
+
+            $scope.dataViewType2.columns.push(col);
+        };
+
+        // Tạo dòng
+        for (var i = 0, len = columns.length; i < len; i++) {
+            var region = columns[i];
+            var row = {
+                id : region.id,
+                name : region.name,
+                cols : []
+            }
+
+            $scope.dataViewType2.rows.push(row);
+        };
+
+        for (var i = 1, len = data.length; i < len; i++) {
+            var row = data[i];
+
+            for (var j = 0, len1 = row.data.length; j < len1; j++) {
+                var d = row.data[j];
+
+                // Tính phần trăm
+                var yieldTotal = data[i].data[0].yield;
+                var percent = d.yield == 0 ? 0 : (d.yield / yieldTotal) * 100;
+                percent = percent.toFixed(2) + '%';
+
+                var col = {
+                    id : row.id,
+                    percentage : percent,
+                    number : $rootScope.numberWithCommas(d.yield)
+                }
+
+                $scope.dataViewType2.rows[j].cols.push(col);
+            };
+        };
+    }
+
+    $scope.switchViewType = function () {
+        $scope.viewType = ($scope.viewType === 1) ? 2 : 1;
+    }
 
     //init the controller
     $scope.init = function () {

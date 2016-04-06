@@ -39,11 +39,11 @@
         </table>
 
         <!-- use a responsive table to align everything-->
-        <table cellspacing="0" class="table table-responsive" id="custom-area-table">
+        <table cellspacing="0" class="table table-responsive custom-area-table" id="custom-area-table" ng-if="viewType == 1 && !isLoading">
             <!--First row contains regions-->
             <tr>
                 <!-- First empty cell-->
-                <th style="padding:0px;"><button class="btn btn-default btn-block cs-btn-switch" ng-hide="1"><span class="glyphicon glyphicon-retweet"></span></button></th>
+                <th style="padding:0px;"><button class="btn btn-default btn-block cs-btn-switch" ng-if="!isLoading" ng-click="switchViewType()"><span class="glyphicon glyphicon-retweet"></span></button></th>
                 <th colspan="2" ng-repeat="cellrow in first_row track by cellrow.id">
                     <div class="row">                        
                         {{cellrow.name}}
@@ -52,7 +52,6 @@
                         <div class="col-md-6">%</div><div class="col-md-6">SL</div>
                     </div>
                 </th>
-
             </tr>
             <!--Display data from this row-->
             <tr ng-repeat="data in data track by data.id">
@@ -67,8 +66,39 @@
                 </td>
             </tr>
         </table>
+
+        <table cellspacing="0" class="table table-responsive custom-area-table" ng-if="viewType == 2 && !isLoading">
+            <!--First row contains regions-->
+            <tr>
+                <!-- First empty cell-->
+                <th style="padding:0px;"><button class="btn btn-default btn-block cs-btn-switch" ng-if="!isLoading" ng-click="switchViewType()"><span class="glyphicon glyphicon-retweet"></span></button></th>
+                <th colspan="2" ng-repeat="col in dataViewType2.columns track by col.id">
+                    <div class="row">                        
+                        {{col.name}}
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">%</div><div class="col-md-6">SL</div>
+                    </div>
+                </th>
+
+            </tr>
+            <!--Display data from this row-->
+            <tr ng-repeat="data in dataViewType2.rows track by data.id">
+
+                <td class="vertical-align-text">{{data.name}}</td>
+
+                <td colspan="2" ng-repeat="data in data.cols track by data.id">
+                    <div class="row">
+                        <div class="col-md-6">{{data.percentage}}</div>
+                        <div class="col-md-6">{{data.number}}</div>
+                    </div>
+                </td>
+            </tr>
+        </table>
+
         <div>
             <img class="ms-loading" src="./img/loading-large.gif" alt="Loading" ng-show="isLoading" />
         </div>
+
     </div>
 </div>
