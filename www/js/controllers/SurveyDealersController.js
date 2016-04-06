@@ -22,7 +22,7 @@ surveyReportApp.controller('SurveyDealersController',
     $scope.showDealer = function(dealer) {
         cacheData(dealer);
 
-        $state.go("tabs.survey-dealer-info", {}, { reload: false });
+        $state.go("tabs.survey-dealer-info", {}, { reload: true });
     };
 
     $scope.loadMore = function() {

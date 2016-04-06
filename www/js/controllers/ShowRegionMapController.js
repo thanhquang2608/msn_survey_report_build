@@ -1,4 +1,4 @@
-﻿surveyReportApp.controller('ShowRegionMapController', function ($scope, $rootScope, $state, $q, AuthService, $window, RegionMapService) {
+﻿surveyReportApp.controller('ShowRegionMapController', function ($scope, $rootScope, $state, $q, AuthService, $window, RegionMapService, ShowReportSurveyAPI, $timeout) {
     // one agency Location consists of:
     // At LatLng
     // description
@@ -8,10 +8,12 @@
     // only one info
     var info = new google.maps.InfoWindow();
     // legend's levels
-    var level = [];
 
     // legend
-    var color = ['#ffb366', '#ffa64d', '#ff9933', '#ff8c1a', '#ff8000', '#e67300', '#cc6600', '#b35900', '#994d00', '#804000'];
+    // var color = ['#ffb366', '#ffa64d', '#ff9933', '#ff8c1a', '#ff8000', '#e67300', '#cc6600', '#b35900', '#994d00', '#804000'];
+    var color = ['#FFF7E7', '#FFE7B6', '#FFD889', '#FFC040', '#FFAF0C', '#D28C00', '#B35900'];
+    var levels = [1000, 3000, 6000, 9000, 12000, 15000, 18000];
+
     $scope.levels;
 
     //map
@@ -27,7 +29,7 @@
     $scope.mapData;
 
     // hold current boundaries data
-    var polygons;
+    var polygons = [];
     var type = "P";
 
     // boundaries
@@ -44,7 +46,6 @@
         var locationLng = $scope.agencyLocation[id].location.longtitude;
 
         $scope.setCenterMap("", new google.maps.LatLng(locationLat, locationLng));
-
     }
 
     function clone(obj) {
@@ -73,11 +74,12 @@
     }
 
     function update_level() {
+        return;
 
         var min = $scope.mapData.min;
         var max = $scope.mapData.max;
 
-        var inc = max / 11;
+        var inc = max / color.length;
         
         if (max > 1000)
             inc = round(inc, 1000);
@@ -139,10 +141,11 @@
         polygons = [];
         angular.forEach($scope.mapData.index, function (val, k) {
             var boundary = getBoundary(k);
-            if (!polygons)
-                polygons = addPolygon(boundary);
-            else
-                polygons = polygons.concat(addPolygon(boundary));
+            addPolygon(boundary);
+            //if (!polygons)
+            //    polygons = addPolygon(boundary);
+            //else
+            //    polygons = polygons.concat(addPolygon(boundary));
         });
     }
     
@@ -151,8 +154,6 @@
 
         if (dest.max < src.max) {
             dest.max = src.max;
-            update_level();
-            updatePolygons();
         }
 
         if (dest.min > src.min)
@@ -204,52 +205,52 @@
     }
 
     //make data layer
-    $scope.makeDataLayerTest = function () {
-        RegionMapService.LoadBoundary('P', null).then(function (response) {
-            boundaries = response;
+    // $scope.makeDataLayerTest = function () {
+    //     RegionMapService.LoadBoundary('P', null).then(function (response) {
+    //         boundaries = response;
 
-            angular.forEach(response, function (val, k) {
-                angular.forEach(val.boundary, function (bval, bk) {
-                    var p = new google.maps.Polygon({
-                        id: val.id,
-                        name: val.name,
-                        paths: google.maps.geometry.encoding.decodePath(bval),
-                        fillOpacity: 0,
-                        strokeWeight: 0,
-                        zIndex: 1
-                    });
+    //         angular.forEach(response, function (val, k) {
+    //             angular.forEach(val.boundary, function (bval, bk) {
+    //                 var p = new google.maps.Polygon({
+    //                     id: val.id,
+    //                     name: val.name,
+    //                     paths: google.maps.geometry.encoding.decodePath(bval),
+    //                     fillOpacity: 0,
+    //                     strokeWeight: 0,
+    //                     zIndex: 1
+    //                 });
 
-                    p.addListener('click', function (e) {
-                        info.close();
+    //                 p.addListener('click', function (e) {
+    //                     info.close();
                         
-                        var content = '<h3><b>' + this.name + '</b></h3>' +
-                              '<div><p> ID: '+this.id+'</p></div>';
+    //                     var content = '<h3><b>' + this.name + '</b></h3>' +
+    //                           '<div><p> ID: '+this.id+'</p></div>';
 
-                        info.setContent(content);
+    //                     info.setContent(content);
 
+    //                     var anchor = new google.maps.MVCObject();
 
-                        var anchor = new google.maps.MVCObject();
+    //                     anchor.set("position", e.latLng);
 
-                        anchor.set("position", e.latLng);
+    //                     info.open($scope.map, anchor);
 
-                        info.open($scope.map, anchor);
+    //                 });
 
-                    });
+    //                 p.setMap($scope.map);
 
-                    p.setMap($scope.map);
+    //             });
+    //         });
 
-                });
-            });
-
-            $scope.closeProgress();
-        });
-    }
+    //         $scope.closeProgress();
+    //     });
+    // }
 
     function addPolygon(boundary) {
         if (!boundary)
             return [];
 
-        var polygons = [];
+        var count = boundary.boundary.length;
+        var index = 0;
         angular.forEach(boundary.boundary, function (val, k) {
             var polygon = new google.maps.Polygon({
                 id: boundary.id,
@@ -262,84 +263,112 @@
                 zIndex: 1
             });
 
-            polygon.addListener('click', function (e) {
-                info.close();
+            polygon.addListener('click', showInfoWindow);
 
-                var map_info = getInfo(this.id);
+            setTimeout(function () {
+                polygon.setMap($scope.map);
+                polygons.push(polygon);
+            }, 50);
+            
 
-                var content;
-
-                if (!map_info)
-                    content = '<h3><b>' + this.name + '</b></h3>' +
-                      '<div>' +
-                        '<p class = "info-text-style"> Không được phép truy cập</p>' +
-                      '</div>';
-                else {
-                    content = '<h3><b>' + this.name + '</b></h3>' +
-                      '<div><table style="border:0px;">';
-                    angular.forEach(map_info, function (data, k) {
-                        content += '<tr class = "info-text-style"><th>' + data.name + ':</th><td style="text-align:right;">' + formatNumber(data.yield) + ' tấn</td></tr>';
-                    });
-                    content += '</table></div>';
-                }
-
-                info.setContent(content);
-
-                var anchor = new google.maps.MVCObject();
-
-                anchor.set("position", e.latLng);
-
-                info.open($scope.map, anchor);
-
-            });
-
-            polygon.setMap($scope.map);
-
-            polygons.push(polygon);
+            if (++index >= count) {
+                $scope.closeProgress();
+            }
+            
         });
-        
-        return polygons;
+    }
+
+    function showInfoWindow(e) {
+        info.close();
+
+        var map_info = getInfo(this.id);
+
+        var content;
+
+        if (!map_info)
+            content = '<h3><b>' + this.name + '</b></h3>' +
+              '<div>' +
+                '<p class = "info-text-style"> Không được phép truy cập</p>' +
+              '</div>';
+        else {
+            content = '<h3><b>' + this.name + '</b></h3>' +
+              '<div><table style="border:0px;">';
+            angular.forEach(map_info, function (data, k) {
+                content += '<tr class = "info-text-style"><th>' + data.name + ':</th><td style="text-align:right;">' + formatNumber(data.yield) + ' tấn</td></tr>';
+            });
+            content += '</table></div>';
+        }
+
+        info.setContent(content);
+
+        var anchor = new google.maps.MVCObject();
+
+        anchor.set("position", e.latLng);
+
+        info.open($scope.map, anchor);
     }
 
     $scope.makeDataLayer = function (type, param) {
+        var isFirst = true;
+        var delay = 0;
+
         var mapPromise = RegionMapService.LoadBoundary(type).then(function (boundariesData) {
             $scope.boundaries = boundariesData;
         }); 
         
         ////////////////////////////////////////////////////////////////////////
 
-        RegionMapService.GetMapData(type, param).then(function (response) {
-            var promises = response;
-            mapPromise.then(function () {
-                angular.forEach(response, function (res, k) {
-                    res.then(function (data) {
-                       if (!$scope.mapData) {
+        //RegionMapService.GetMapData(type, param).then(function (response) {
+            //var promises = response;
+        mapPromise.then(function () {
+            ShowReportSurveyAPI.GetRegion().then(function (regions) {
+                async.each(regions, function (region, k) {
+                    console.log(region);
+                    RegionMapService.GetProvinceDataByRegion(region).then(function (data) {
+                        if (!$scope.mapData) {
                             $scope.mapData = clone(data);
                             $scope.mapData.data = [];
                             $scope.mapData.data = $scope.mapData.data.concat(data.data);
                         }
-                        else
+                        else {
                             mergeData(data, $scope.mapData);
+                        }
 
-                        if (!$scope.levels)
-                            update_level();
+                        if (isFirst) {
+                            isFirst = false;
+                            draw(data);
+                        } else {
+                            return;
+                            delay += 500;
 
-                        angular.forEach(data.index, function (val, k) {
-                            var boundary = getBoundary(k);
-                            if (!polygons)
-                                polygons = addPolygon(boundary);
-                            else
-                                polygons = polygons.concat(addPolygon(boundary));
-                        });
+                            if (delay > 2000) {
+                                delay = 2000;
+                            }
 
-                        $scope.closeProgress();
+                            $scope.closeProgress();
+
+                            setTimeout(function () {
+                                draw(data);
+                            }, delay);
+                        }
                     });
                 });
-            })
-        });
+            });
+                
+        })
         
         ////////////////////////////////////////////////////////////////////////
-                           
+    }
+
+    function draw(data) {
+        for (var k in data.index) {
+            drawProvince(k);
+        }
+    }
+
+    function drawProvince(k) {
+        var boundary = getBoundary(k);
+        addPolygon(boundary);
     }
 
     function setMapColor(id) {
@@ -442,10 +471,50 @@
             zoomControlOptions: {
                 style: google.maps.ZoomControlStyle.LARGE
             },
+            styles: [
+                {
+                "featureType": "water",
+                "elementType": "geometry",
+                "stylers": [
+                  { "visibility": "on" }
+                ]
+                },{
+                "featureType": "landscape",
+                "stylers": [
+                  { "visibility": "off" }
+                ]
+                },{
+                "featureType": "road",
+                "stylers": [
+                  { "visibility": "off" }
+                ]
+                },{
+                "featureType": "administrative",
+                "stylers": [
+                  { "visibility": "off" }
+                ]
+                },{
+                "featureType": "poi",
+                "stylers": [
+                  { "visibility": "on" }
+                ]
+                },{
+                "elementType": "labels",
+                "stylers": [
+                  { "visibility": "on" }
+                ]
+            }
+          ]
         };
 
         // new map and put it in div "map"
-        $scope.map = new google.maps.Map(document.getElementById("map"), mapOptions);
+        //if (RegionMapService.getMap())            
+        //    $scope.map = RegionMapService.getMap();
+        //else {
+            $scope.map = new google.maps.Map(document.getElementById("map"), mapOptions);
+        //    console.log('create map', $scope.map);
+        //    RegionMapService.setMap($scope.map);
+        //}
         if (document.getElementById("show-map").clientHeight === 0) {
             document.getElementById("show-map").style.height = (document.documentElement.clientHeight - 65) + 'px';
             document.getElementById("show-map").style.paddingTop = "65px";
@@ -510,10 +579,40 @@
         });
     }
 
+    
     angular.element(document).ready(function () {
+        initLevel();
         $scope.openProgress();
         $scope.initMap();
         $scope.loadDefaultList();
         $scope.makeDataLayer('P', null);
+    });
+
+    function initLevel() {
+        $scope.levels = [];
+        for (var i = 0, len = levels.length; i < len; i++) {
+            $scope.levels.push({ show: true, color: color[i], type: true, 'yield': levels[i] });
+        }
+        console.log($scope.levels);
+    }
+
+    $scope.$on('$destroy', function () {
+        console.log("destroy");
+        //$scope.map.destroy();
+        //$scope.map = null;
+        //$scope.boundaries = null;
+        //polygons = null;
+        //$scope.mapData = null;
+        //delete ($scope.boundaries);
+        //delete (polygons);
+        //google.maps.event.clearInstanceListeners(window);
+        //google.maps.event.clearInstanceListeners(document);
+        console.log(polygons);
+        for (var i = 0; i < polygons.length; i++) {
+            if (polygons[i]) {
+                polygons[i].setMap(null);
+            }
+        }
+        polygons = null;
     });
 });

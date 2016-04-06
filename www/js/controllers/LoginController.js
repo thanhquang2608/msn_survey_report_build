@@ -22,7 +22,7 @@
             function (response) {
                 $scope.user.password = null;
                 console.log("success")
-                $state.go("tabs.report-survey-menu", {}, { reload: false });
+                $state.go("tabs.report-survey-menu", {}, { reload: true });
             },
 
             function (err) {

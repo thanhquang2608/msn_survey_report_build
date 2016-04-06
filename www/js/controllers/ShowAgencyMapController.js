@@ -298,7 +298,7 @@
         }
     }
     $scope.OpenSetting = function () {
-        $state.go("tabs.agency-filter", {}, { reload: false });
+        $state.go("tabs.agency-filter", {}, { reload: true });
     }
     $scope.ShowInfoDealer = function () {
         
@@ -309,7 +309,7 @@
         AgencyDealerCache.CacheDealer(dealer);
         AgencyDealerCache.CacheBuy(buy);
 
-        $state.go("tabs.agency-dealer-info", {}, { reload: false });
+        $state.go("tabs.agency-dealer-info", {}, { reload: true });
     }
     
     function SetPlaceName(box, id) {
@@ -400,9 +400,6 @@
         //init search box
         $scope.AttachSearchUI();
 
-        google.maps.event.addListener($scope.map, "click", function (event) {
-            $scope.info_window.close();
-        });
 
         //$user_info = ShowReportSurveyAPI.GetUserInfo();
 

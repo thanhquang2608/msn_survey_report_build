@@ -2,9 +2,9 @@
 <html ng-app="AncoSurveyReportApp">
 <head>
     <meta charset="utf-8"/>
-    <!--<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />-->
+    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
     <!-- FIX TINY SCREEN -->
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1" /> -->
     <!--
         Customize the content security policy in the meta tag below as needed. Add 'unsafe-inline' to default-src to enable inline JavaScript.
         For details, see http://go.microsoft.com/fwlink/?LinkID=617521
@@ -37,6 +37,7 @@
     <script src="scripts/jquery-ui.js"></script>
 	<script src="scripts/ng-infinite-scroll.js"></script>
     <script src="scripts/bindonce.min.js"></script>
+    <script src="scripts/async.min.js"></script>
 </head>
 <body>
     <div style="font-size: large" autoscroll="true" ui-view></div> 
@@ -78,7 +79,7 @@
                     <img src="img/loading.gif" style="display: inline-block;" />
                 </div>
                 <div class="" style="width: 100%; text-align: center">
-                    <h4 style="display inline-block;">
+                    <h4 style="display: inline-block;">
                         Ðang tải...
                     </h4>
                 </div>
@@ -86,24 +87,9 @@
         </div>
     </script>
 
-
-    <script type="text/ng-template" id="errorModalContent.html">
-        <div class="modal-header no-margin-bot">
-            <div>
-                <h4 class="no-margin-bot">Thông báo</h4>
-            </div>
-        </div>
-        <div class="modal-body">
-            <div class="alert alert-danger no-margin-bot">
-                <div>{{message}}</div>
-            </div>
-        </div>
-        <div class="modal-footer no-margin-bot">
-            <button type="button" class="btn btn-default" ng-click="cancel()">Đóng</button>
-        </div>
-    </script>
-
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC83L6L5KItj4dS7NDqHjH6twAwRYnQ1OE&sensor=false&libraries=places&libraries=visualization&libraries=geometry" async defer></script>
+    
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
 </body>
 </html>

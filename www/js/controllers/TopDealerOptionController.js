@@ -71,7 +71,7 @@
         //Cache the data of this form
         if (validation()) {
             $scope.CacheData();
-            $state.go("tabs.top-dealer-filter", {}, { reload: false });
+            $state.go("tabs.top-dealer-filter", {}, { reload: true });
         }
 
         

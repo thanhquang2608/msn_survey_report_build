@@ -365,6 +365,7 @@ surveyReportApp
 
                 dataTemp.percentage = percent;
                 dataTemp.number = $rootScope.numberWithCommas(val.yield);
+                dataTemp.yield = val.yield;
             });
             if (temp.name === "Tổng")
                 data.unshift(temp);
@@ -859,6 +860,26 @@ surveyReportApp
         return promises;
     }
 
+    function getProvinceDataByRegion(region) {
+        //var promises = [];
+        var company = $rootScope.user_info.company_name;
+        if ($rootScope.user_info.role === USERS.NSM) {
+            company = 'all';
+        }
+
+        //angular.forEach(regions, function (region, k) {
+            //if (region.id !== 'all') {
+                //promises.push(
+                    return ShowReportSurveyAPI.GetProvince(region.id, company).then(function (provinces_list) {
+                        var provinces_index = indexData(provinces_list);
+                        return CallGetMethod_Map(serviceBase + '/yield/regions/' + region.id + '/products/all/buy/all/company/' + company, provinces_index, formatMapData);
+                    });
+            //}
+        //});
+
+        //return promises;
+    }
+
     function getDistrictData(provinces) {
         var promises = [];
         var company = $rootScope.user_info.company_name;
@@ -929,12 +950,26 @@ surveyReportApp
                 break;
         }
     }
+    // Leak memory google map
+    var mapObj = null;
+
+    function _getMap() {
+        return mapObj;
+    }
+
+    function _setMap(obj) {
+        mapObj = obj;
+    }
 
     return {
         LoadDefaultList: loadDefaultList,
         LoadGeoJson: loadGeoJson,
         LoadBoundary: loadBoundary,
         GetMapData: getMapData,
+        GetProvinceDataByRegion: getProvinceDataByRegion,
+        getMap: _getMap,
+        setMap: _setMap
+
     }
 })
 .service('ReportSurveyOptionCache', function ($rootScope, USERS) {

@@ -1,22 +1,4 @@
-﻿surveyReportApp
-    .controller('ModalInstanceCtrl', function ($scope, $modalInstance, message, mode) {
-        $scope.reason = "";
-        $scope.ok = function () {
-
-            if (mode) {
-                $modalInstance.close($scope.reason);
-            }
-            else {
-                $modalInstance.close(1);
-            }
-        };
-
-        $scope.message = message;
-        $scope.cancel = function () {
-            $modalInstance.dismiss('cancel');
-        };
-    })
-    .controller('TabController', function ($rootScope, $scope, $state, $modal, $log, AuthService, ShowReportSurveyAPI, AUTH_EVENTS, NETWORK_EVENTS) {
+﻿surveyReportApp.controller('TabController', function ($rootScope, $scope, $state, $modal, $log, AuthService, ShowReportSurveyAPI, AUTH_EVENTS, NETWORK_EVENTS) {
     document.getElementById("home-button").style.visibility = 'visible';
     $scope.setBackVisibility = function (flag) {
         document.getElementById("back-button").style.visibility = flag;
@@ -178,51 +160,4 @@
     };
    
     $scope.getUser();
-
-
-    $scope.open = function (msg) {
-
-        $scope.modal = $modal.open({
-            animation: true,
-            templateUrl: 'errorModalContent.html',
-            controller: 'ModalInstanceCtrl',
-            size: 'sm',
-            resolve: {
-                message: function () {
-                    return msg;
-                },
-                mode: function () {
-                    return 0;
-                }
-            }
-        });
-
-        $scope.modal.result.then(function (from) {
-
-        }, function () {
-            $log.info('Modal dismissed at: ' + new Date());
-            //alert('Modal dismissed at: ' + new Date());
-        });
-    };
-    $rootScope.processRequestError = function (response) {
-        if (response.status == 403) {
-            $scope.open("Bạn không có quyền thực hiện thao tác này!");
-        }
-        else if (response.status != 0 && response.status != 408) {
-            console.log(response);
-            var msg = "Lỗi trong quá trình xử lý";
-            if (response.data == null || response.data.message == null) {
-                msg = "Thao tác thất bại!";
-            }
-            else
-                msg = response.data.message;
-            $scope.open(msg);
-        }
-        else {
-            $scope.open("Kết nối thất bại. Kiểm tra lại đường truyền.");
-        }
-    }
-    $rootScope.processMessageError = function (msg) {
-         $scope.open(msg);
-    }
 });
