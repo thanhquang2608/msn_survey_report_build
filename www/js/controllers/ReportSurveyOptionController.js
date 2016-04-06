@@ -143,7 +143,7 @@
             if (validate()) {
                 //Cache the data of this form
                 $scope.CacheData();
-                $state.go("tabs.report-survey-area", {}, { reload: true });
+                $state.go("tabs.report-survey-area", {}, { reload: false });
             }
         };
 

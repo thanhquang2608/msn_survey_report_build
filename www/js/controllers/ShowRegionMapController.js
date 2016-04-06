@@ -73,6 +73,7 @@
     }
 
     function update_level() {
+        return;
 
         var min = $scope.mapData.min;
         var max = $scope.mapData.max;
@@ -129,6 +130,8 @@
     }
 
     function updatePolygons() {
+        // return;
+
         if (!polygons)
             return;
 
@@ -262,45 +265,46 @@
                 zIndex: 1
             });
 
-            polygon.addListener('click', function (e) {
-                info.close();
+            // polygon.addListener('click', function (e) {
+            //     info.close();
 
-                var map_info = getInfo(this.id);
+            //     var map_info = getInfo(this.id);
 
-                var content;
+            //     var content;
 
-                if (!map_info)
-                    content = '<h3><b>' + this.name + '</b></h3>' +
-                      '<div>' +
-                        '<p class = "info-text-style"> Không được phép truy cập</p>' +
-                      '</div>';
-                else {
-                    content = '<h3><b>' + this.name + '</b></h3>' +
-                      '<div><table style="border:0px;">';
-                    angular.forEach(map_info, function (data, k) {
-                        content += '<tr class = "info-text-style"><th>' + data.name + ':</th><td style="text-align:right;">' + formatNumber(data.yield) + ' tấn</td></tr>';
-                    });
-                    content += '</table></div>';
-                }
+            //     if (!map_info)
+            //         content = '<h3><b>' + this.name + '</b></h3>' +
+            //           '<div>' +
+            //             '<p class = "info-text-style"> Không được phép truy cập</p>' +
+            //           '</div>';
+            //     else {
+            //         content = '<h3><b>' + this.name + '</b></h3>' +
+            //           '<div><table style="border:0px;">';
+            //         angular.forEach(map_info, function (data, k) {
+            //             content += '<tr class = "info-text-style"><th>' + data.name + ':</th><td style="text-align:right;">' + formatNumber(data.yield) + ' tấn</td></tr>';
+            //         });
+            //         content += '</table></div>';
+            //     }
 
-                info.setContent(content);
+            //     info.setContent(content);
 
-                var anchor = new google.maps.MVCObject();
+            //     var anchor = new google.maps.MVCObject();
 
-                anchor.set("position", e.latLng);
+            //     anchor.set("position", e.latLng);
 
-                info.open($scope.map, anchor);
-
-            });
+            //     info.open($scope.map, anchor);
+            // });
 
             polygon.setMap($scope.map);
 
-            polygons.push(polygon);
+            polygons.push(polygon);            
         });
         
         return polygons;
     }
 
+
+    var delay = 500;
     $scope.makeDataLayer = function (type, param) {
         var mapPromise = RegionMapService.LoadBoundary(type).then(function (boundariesData) {
             $scope.boundaries = boundariesData;
@@ -308,31 +312,57 @@
         
         ////////////////////////////////////////////////////////////////////////
 
+        var isFirst = true;
         RegionMapService.GetMapData(type, param).then(function (response) {
             var promises = response;
             mapPromise.then(function () {
-                angular.forEach(response, function (res, k) {
+                async.each(response, function (res, k) {
                     res.then(function (data) {
-                       if (!$scope.mapData) {
-                            $scope.mapData = clone(data);
-                            $scope.mapData.data = [];
-                            $scope.mapData.data = $scope.mapData.data.concat(data.data);
+                        // if (!$scope.mapData) {
+                        //     $scope.mapData = clone(data);
+                        //     $scope.mapData.data = [];
+                        //     $scope.mapData.data = $scope.mapData.data.concat(data.data);
+                        // }
+                        // else
+                        //     mergeData(data, $scope.mapData);
+
+                        // if (!$scope.levels)
+                        //     update_level();
+
+                        // angular.forEach(data.index, function (val, k) {
+                        //     var boundary = getBoundary(k);
+                        //     if (!polygons)
+                        //         polygons = addPolygon(boundary);
+                        //     else
+                        //         polygons = polygons.concat(addPolygon(boundary));
+                        // });
+
+                        // for (var k in data.index) {
+                              // setTimeout(function() {
+                                // var boundary = getBoundary(k);
+                                // polygons = addPolygon(boundary);
+                            // }, 100);
+                            // draw(k);
+                        // }
+
+                        if (isFirst) {
+                            isFirst = false;
+                            draw(data);
+                           
+                        } else {
+                            delay += 1000;
+
+                            if (delay > 2000) {
+                                delay = 2000;
+                            }
+
+                            $scope.closeProgress();
+
+                            console.log(delay);
+                            setTimeout(function () {
+                                draw(data);
+                            }, delay);
                         }
-                        else
-                            mergeData(data, $scope.mapData);
-
-                        if (!$scope.levels)
-                            update_level();
-
-                        angular.forEach(data.index, function (val, k) {
-                            var boundary = getBoundary(k);
-                            if (!polygons)
-                                polygons = addPolygon(boundary);
-                            else
-                                polygons = polygons.concat(addPolygon(boundary));
-                        });
-
-                        $scope.closeProgress();
                     });
                 });
             })
@@ -340,6 +370,22 @@
         
         ////////////////////////////////////////////////////////////////////////
                            
+    }
+
+    function draw(data) {
+        for (var k in data.index) {
+            drawProvince(k);
+        }
+    }
+
+    function drawProvince(k) {
+        setTimeout(function() {
+            var boundary = getBoundary(k);
+            if (!polygons)
+                polygons = addPolygon(boundary);
+            else
+                polygons = polygons.concat(addPolygon(boundary));
+        }, 0);
     }
 
     function setMapColor(id) {
@@ -514,6 +560,10 @@
         $scope.openProgress();
         $scope.initMap();
         $scope.loadDefaultList();
-        $scope.makeDataLayer('P', null);
+        
+        setTimeout(function () {
+            $scope.makeDataLayer('P', null);
+        } , 1000);
+        
     });
 });

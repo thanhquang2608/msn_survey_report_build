@@ -98,7 +98,7 @@ surveyReportApp.controller('SurveyController',
 
                 $scope.isLoading = true;
 
-                $state.go("tabs.survey-dealers", {}, { reload: true });
+                $state.go("tabs.survey-dealers", {}, { reload: false });
             };
 
             // Define private functions

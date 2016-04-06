@@ -25,7 +25,7 @@
 
     //on click show agency feature
     $scope.OnClickShowAgencyLocation = function () {
-        $state.go("tabs.show-agency-map", {}, { reload: true });
+        $state.go("tabs.show-agency-map");
     }
 
     // on click show region feature
@@ -35,7 +35,7 @@
 
     // on click Survey
     $scope.OnClickSurvey = function () {
-        $state.go("tabs.survey", {}, { reload: true });
+        $state.go("tabs.survey");
     }
 
     $scope.init = function () {
