@@ -99,11 +99,11 @@ table#custom-option-table option {
     font-family: 'Roboto-light', sans-serif;
 }
 
-table#custom-area-table th, table#custom-area-table td{
+table#custom-area-table th, table.custom-area-table th, table#custom-area-table td, table.custom-area-table td{
     font-family: 'Roboto-med', sans-serif;
 }
 
-table#custom-area-table div{
+table#custom-area-table div, table.custom-area-table div{
     font-family: 'Roboto-regular', sans-serif;
 }
 
@@ -500,14 +500,15 @@ ul.ui-autocomplete.ui-menu li{
     
 }
 /*custom area table*/
-#custom-area-table .row{
+#custom-area-table .row, .custom-area-table .row{
     text-align:center;
 }
-table#custom-area-table{
+
+table#custom-area-table, table.custom-area-table{
     padding:0px;
 }
-table#custom-area-table th, table#custom-area-table td{
-    border:1px solid black;
+table#custom-area-table th, table.custom-area-table th, table#custom-area-table td, table.custom-area-table td{
+    border:1px solid black !important;
 }
 /*custom info table*/
 table#custom-info-table  th{
