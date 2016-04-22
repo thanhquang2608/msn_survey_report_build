@@ -43,7 +43,7 @@
             <!--First row contains regions-->
             <tr>
                 <!-- First empty cell-->
-                <th style="padding:0px;"><button class="btn btn-default btn-block cs-btn-switch" ng-if="!isLoading" ng-click="switchViewType()"><span class="glyphicon glyphicon-retweet"></span></button></th>
+                <th style="padding:0px;"><button class="btn btn-default btn-block cs-btn-switch" ng-if="!option.ward" ng-click="switchViewType()"><span class="glyphicon glyphicon-retweet"></span></button></th>
                 <th colspan="2" ng-repeat="cellrow in first_row track by cellrow.id">
                     <div class="row">                        
                         {{cellrow.name}}
@@ -71,7 +71,7 @@
             <!--First row contains regions-->
             <tr>
                 <!-- First empty cell-->
-                <th style="padding:0px;"><button class="btn btn-default btn-block cs-btn-switch" ng-if="!isLoading" ng-click="switchViewType()"><span class="glyphicon glyphicon-retweet"></span></button></th>
+                <th style="padding:0px;"><button class="btn btn-default btn-block cs-btn-switch" ng-if="!option.ward" ng-click="switchViewType()"><span class="glyphicon glyphicon-retweet"></span></button></th>
                 <th colspan="2" ng-repeat="col in dataViewType2.columns track by col.id">
                     <div class="row">                        
                         {{col.name}}

@@ -1330,6 +1330,9 @@ surveyReportApp
         $rootScope.$broadcast(AUTH_EVENTS.authenticated);
         RoleService.getUserRole(user.SaleRepId);
         RoleService.setCompany(user.AC_PC);
+
+        // NKHuy logging
+        // console.log("[Logger] Login data: ", JSON.stringify(user));
     }
 
     function useCredentials(token) {

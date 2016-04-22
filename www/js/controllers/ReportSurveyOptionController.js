@@ -89,8 +89,13 @@
         $scope.UpdateRegion = function () {
             ShowReportSurveyAPI.GetRegion().then(function (response) {
                 $scope.regions = response;
-                $scope.regions.unshift({id:'all', name:'Cả Nước'});
-                $scope.lock.region = false;
+                if (null !== $scope.user.RoleId && 5 == $scope.user.RoleId) {
+                    $scope.regions.unshift({ id: 'all', name: 'Cả Nước' });
+                    $scope.lock.region = false;
+                }
+
+                // NKHuy logging
+                //console.log("[logger] Implement a region option....");
             });                       
         }
 

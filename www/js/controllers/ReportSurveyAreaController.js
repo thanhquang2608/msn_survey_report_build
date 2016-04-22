@@ -46,7 +46,9 @@
 
             // Tạm thời xong thì tính luôn, nếu chậm thì có thể bỏ, khi nào
             // người dùng nhấn button thì mới tính
-            generateDataViewType2($scope.first_row, $scope.data);
+            if (!option.ward) {
+                generateDataViewType2($scope.first_row, $scope.data);
+            }
 
             console.log($scope.data);
             console.log($scope.dataViewType2);
